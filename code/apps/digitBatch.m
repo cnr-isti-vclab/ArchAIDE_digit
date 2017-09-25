@@ -42,7 +42,6 @@ if(exist('output', 'dir') ~= 7)
 end
 
 outputFolder = [PathName(1:(end - 1)), '_output/'];
-mkdir(outputFolder);  
         
 for i=1:length(lst)
     

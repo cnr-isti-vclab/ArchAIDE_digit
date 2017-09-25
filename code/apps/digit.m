@@ -200,7 +200,7 @@ if(~isempty(handles.img))
      toc
  end
 
- save([handles.outputFolder, nameOut, '_data.mat'], 'handles');
+ saveData(nameOut, handles);
 
  drawThings(hObject, eventdata, handles);
 end
@@ -230,6 +230,8 @@ function file_menu_open_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 [FileName, PathName, ~] = uigetfile('*.*', 'Select a pottery file...');
 handles = InitImage(PathName, FileName, handles);
+
+drawThings(hObject, eventdata, handles);
 
 handles.lst = dir([handles.PathName, '*.', handles.file_ext]);
 handles.folder_flag = 0;
@@ -387,6 +389,8 @@ if(handles.folder_flag)
     handles.counter = handles.counter + 1;
     if(handles.counter <= n)
         handles = InitImage(handles.PathName, handles.lst(handles.counter).name, handles);        
+        drawThings(hObject, eventdata, handles);
+       
         guidata(hObject, handles);
         set(handles.show_background, 'Value', 1.0);    
     end
@@ -408,6 +412,7 @@ else
     end
 end
 
+
 function handles = InitImage(PathName, FileName, handles)
 full_path = [PathName, FileName];
 img_tmp = double(imread(full_path)) / 255;
@@ -418,39 +423,67 @@ bImageRescale = get(handles.checkResampleImage, 'Value');
 handles.img = img_tmp;
 handles.bS = bS;
 
+nameOut = RemoveExt(FileName);
+
+name_data = [PathName(1:(end - 1)),'_output/', nameOut, '_data.mat'];
+
 cla(handles.axes2, 'reset')
 axes(handles.axes2);
 imshow(handles.img);
 
-outputFolder = [PathName(1:(end-1)), '_output/'];
-mkdir(outputFolder); 
+if(exist(name_data, 'file'))
+    tmp = load(name_data);
+    handles.PathName = tmp.data.PathName;
+    handles.file_name = tmp.data.file_name;
+    handles.nameOut = tmp.data.nameOut;
+    handles.outputFolder = tmp.data.outputFolder;
+    handles.inside_profile = tmp.data.inside_profile;
+    handles.outside_profile = tmp.data.outside_profile;
+    handles.handle_ip = tmp.data.handle_ip;
+    handles.handle_op = tmp.data.handle_op;
+    handles.uncertain_profile = tmp.data.uncertain_profile;
+    handles.handle_section = tmp.data.handle_section;
+    handles.axis_profile = tmp.data.axis_profile;
+    handles.scale_points = tmp.data.scale_points;
+    handles.inside_profile_mm = tmp.data.inside_profile_mm;
+    handles.outside_profile_mm = tmp.data.outside_profile_mm;
+    handles.handle_ip_mm = tmp.data.handle_ip_mm;
+    handles.handle_op_mm = tmp.data.handle_op_mm;
+    handles.axis_profile_mm = tmp.data.axis_profile_mm;
+    handles.dataFor3D = tmp.data.dataFor3D;
+    handles.file_ext = tmp.data.file_ext;
+else
+    outputFolder = [PathName(1:(end-1)), '_output/'];
+    if(exist(outputFolder, 'dir') ~= 7)
+        mkdir(outputFolder); 
+    else
+        exist(outputFolder, 'dir')
+    end
 
-%paths
-handles.PathName = PathName;
-handles.file_name = FileName;
-handles.outputFolder = outputFolder;
-handles.file_ext = getExt(FileName);
-%pixels
-handles.inside_profile = [];
-handles.outside_profile = [];
-handles.handle_ip = [];
-handles.handle_op = [];
-handles.uncertain_profile = [];
-handles.handle_section = [];
-handles.axis_profile = [];
-handles.scale_points = [];
-handles.handle_section = [];
-%mm
-handles.inside_profile_mm = [];
-handles.outside_profile_mm = [];
-handles.handle_ip_mm = [];
-handles.handle_op_mm = [];
-handles.handle_section_mm = []; 
-handles.axis_profile_mm = [];
-
-handles.PathName = PathName;
-handles.dataFor3D = 0;
-
+    %paths
+    handles.PathName = PathName;
+    handles.file_name = FileName;
+    handles.outputFolder = outputFolder;
+    handles.file_ext = getExt(FileName);
+    %pixels
+    handles.inside_profile = [];
+    handles.outside_profile = [];
+    handles.handle_ip = [];
+    handles.handle_op = [];
+    handles.uncertain_profile = [];
+    handles.handle_section = [];
+    handles.axis_profile = [];
+    handles.scale_points = [];
+    handles.handle_section = [];
+    %mm
+    handles.inside_profile_mm = [];
+    handles.outside_profile_mm = [];
+    handles.handle_ip_mm = [];
+    handles.handle_op_mm = [];
+    handles.handle_section_mm = []; 
+    handles.axis_profile_mm = [];
+    handles.dataFor3D = 0;
+end
 
 % --------------------------------------------------------------------
 function file_menu_open_folder_Callback(hObject, eventdata, handles)
@@ -463,12 +496,13 @@ file_ext = getExt(FileName);
 handles.lst = dir([PathName, '*.', file_ext]);
 
 handles = InitImage(PathName, handles.lst(1).name, handles);
+
 handles.counter = 1;
 handles.folder_flag = 1;
 guidata(hObject, handles);
 set(handles.show_background, 'Value', 1.0);
 
-
+drawThings(hObject, eventdata, handles);
 
 function editCleaningIterations_Callback(hObject, eventdata, handles)
 % hObject    handle to editCleaningIterations (see GCBO)
