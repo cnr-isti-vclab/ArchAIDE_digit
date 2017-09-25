@@ -3,17 +3,26 @@ function digitBatch(PathName, format, ratio_mm_pixels, bImageRescale, bHandles, 
 %        digitBatch(PathName, format, ratio_mm_pixels, bImageRescale, bHandles, bCreate3D)
 %
 %        input:
-%               -PathName: path of the folder to be processed.
-%               -format: format of the input files.
-%               -ratio_mm_pixels: 
-%               -bImageRescale:
-%               -bHandles:
-%               -bCreate3D: 
+%               -PathName: path of the folder where files to be processed
+%               are.
+%               -format: format of input files.
+%               -ratio_mm_pixels: is the ratio mm over pixels. If it is
+%               set to a value below 0.0, the program will extract the
+%               scale automatically using TesseractOCR.
+%               -bImageRescale: is a boolean flag. If true (i.e., 1), the program
+%                will rescale input images to maintain tested thresholds.
+%               Otherwise, (i.e., 0) threhsolds will be updated.
+%               -bHandles: is a boolean flag. If true (i.e., 1), the
+%               program will extract handles in drawings. Otherwise, it
+%               will not.
+%               -bCreate3D: is a boolean flag. If true (i.e., 1), the
+%               program will compute a 3D model of the drawing. Otherwise, 
+%               it will not.
 %
 %        c  ---->   ratio_mm_pixels = 330 / 1730
 %                   bImageRescale = 0
 %                   bHandles = 0;  
-%
+% 
 % Digit
 % An automatic MATLAB app for the digitalization of archaeological drawings. 
 % http://vcg.isti.cnr.it
