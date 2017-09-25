@@ -230,7 +230,7 @@ else
         op = lineCrawlerGen(tmp_lines2, x_cut, y_cut, size(lines2,1));
     end
     
-    [ip, op] = RimPointAdjustment(ip, op);         
+    [ip, op] = rimPointAdjustment(ip, op);         
 end
 
 %

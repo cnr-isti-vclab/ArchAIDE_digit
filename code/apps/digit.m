@@ -199,8 +199,8 @@ if(~isempty(handles.img))
      create3DModels(handles, bCut);
      toc
  end
-% else
-%     save([handles.outputFolder, '/data.mat'], 'handles');
+
+ save([handles.outputFolder, nameOut, '_data.mat'], 'handles');
 
  drawThings(hObject, eventdata, handles);
 end
@@ -228,7 +228,7 @@ function file_menu_open_Callback(hObject, eventdata, handles)
 % hObject    handle to file_menu_open (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[FileName, PathName,~] = uigetfile('*.*', 'Select a pottery file...');
+[FileName, PathName, ~] = uigetfile('*.*', 'Select a pottery file...');
 handles = InitImage(PathName, FileName, handles);
 
 handles.lst = dir([handles.PathName, '*.', handles.file_ext]);
@@ -422,10 +422,8 @@ cla(handles.axes2, 'reset')
 axes(handles.axes2);
 imshow(handles.img);
 
-name = RemoveExt(FileName);
-outputFolder = ['output/', name];
-mkdir(outputFolder);
-imwrite(img_tmp, [outputFolder, '/', FileName]);
+outputFolder = [PathName(1:(end-1)), '_output/'];
+mkdir(outputFolder); 
 
 %paths
 handles.PathName = PathName;
