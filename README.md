@@ -1,21 +1,10 @@
-HDR Toolbox
-===========
-
-
-Author: Francesco Banterle
-
-License: this software is distributed under the MPL 2.0 license: https://www.mozilla.org/MPL/2.0/
-
-Year: 2016-17
-
-Title: ArchAIDE
-
-Version: 1.0
-
+ArchAIDE Digit Tools
+====================
+ArchAIDE Digit Tools are tools for the automatic digitalizations of technical drawings of archaeological vessels.
 
 HOW TO INSTALL:
 ===============
-1) Unzip the file master zip in a FOLDER on your PC/MAC
+1) Unzip the file .zip in a FOLDER on your PC/MAC
 
 2) Run Matlab
 
