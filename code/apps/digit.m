@@ -388,7 +388,7 @@ if(handles.folder_flag)
     n = length(handles.lst);
     handles.counter = handles.counter + 1;
     if(handles.counter <= n)
-        handles = InitImage(handles.PathName, handles.lst(handles.counter).name, handles);        
+        handles = InitImage([handles.PathName, '/'], handles.lst(handles.counter).name, handles);        
         drawThings(hObject, eventdata, handles);
        
         guidata(hObject, handles);
@@ -414,22 +414,10 @@ end
 
 
 function handles = InitImage(PathName, FileName, handles)
-full_path = [PathName, FileName];
-img_tmp = double(imread(full_path)) / 255;
-
-bImageRescale = get(handles.checkResampleImage, 'Value');
-[img_tmp, bS]  = imRescaleBinary(img_tmp, bImageRescale);
-
-handles.img = img_tmp;
-handles.bS = bS;
 
 nameOut = RemoveExt(FileName);
 
 name_data = [PathName(1:(end - 1)),'_output/', nameOut, '_data.mat'];
-
-cla(handles.axes2, 'reset')
-axes(handles.axes2);
-imshow(handles.img);
 
 if(exist(name_data, 'file'))
     tmp = load(name_data);
@@ -452,7 +440,11 @@ if(exist(name_data, 'file'))
     handles.axis_profile_mm = tmp.data.axis_profile_mm;
     handles.dataFor3D = tmp.data.dataFor3D;
     handles.file_ext = tmp.data.file_ext;
+    handles.bImageRescale = tmp.data.bImageRescale;
+    bImageRescale = handles.bImageRescale;
 else
+    bImageRescale = get(handles.checkResampleImage, 'Value');
+
     outputFolder = [PathName(1:(end-1)), '_output/'];
     if(exist(outputFolder, 'dir') ~= 7)
         mkdir(outputFolder); 
@@ -484,6 +476,17 @@ else
     handles.axis_profile_mm = [];
     handles.dataFor3D = 0;
 end
+
+full_path = [PathName, FileName];
+img_tmp = double(imread(full_path)) / 255;
+
+[img_tmp, bS]  = imRescaleBinary(img_tmp, bImageRescale);
+
+handles.img = img_tmp;
+handles.bS = bS;
+cla(handles.axes2, 'reset')
+axes(handles.axes2);
+imshow(handles.img);
 
 % --------------------------------------------------------------------
 function file_menu_open_folder_Callback(hObject, eventdata, handles)

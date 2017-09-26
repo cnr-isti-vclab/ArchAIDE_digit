@@ -50,7 +50,15 @@ if(exist('output', 'dir') ~= 7)
    mkdir('output'); 
 end
 
-outputFolder = [PathName(1:(end - 1)), '_output/'];
+if(PathName(end) == '/')
+   PathName = PathName(1:(end - 1)); 
+end
+
+outputFolder = [PathName, '_output/'];
+
+if(exist(outputFolder, 'dir') ~= 7)
+   mkdir(outputFolder);     
+end
         
 for i=1:length(lst)
     
@@ -178,8 +186,10 @@ for i=1:length(lst)
          handles.handle_section = handle_section;
          handles.axis_profile = axis_profile;
          handles.scale_points = scale_points;    
+         handles.bImageRescale = bImageRescale;
          
-         save([outputFolder, nameOut, '_data.mat'], 'handles');
+          
+         saveData(nameOut, handles);
          
          %
          %create a 3D model and export it into a PLY file

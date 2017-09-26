@@ -27,7 +27,13 @@ data.inside_profile = handles.inside_profile;
 data.outside_profile = handles.outside_profile;
 data.handle_ip = handles.handle_ip;
 data.handle_op = handles.handle_op;
-data.uncertain_profile = handles.uncertain_profile;
+
+if(exist('data.uncertain_profile', 'var'))
+    data.uncertain_profile = handles.uncertain_profile;
+else
+    data.uncertain_profile = [];
+end
+
 data.handle_section = handles.handle_section;
 data.axis_profile = handles.axis_profile;
 data.scale_points = handles.scale_points;
@@ -37,7 +43,13 @@ data.handle_ip_mm = handles.handle_ip_mm;
 data.handle_op_mm = handles.handle_op_mm;
 data.axis_profile_mm = handles.axis_profile_mm;
 data.dataFor3D = handles.dataFor3D;
-data.file_ext = handles.file_ext;
+data.bImageRescale = handles.bImageRescale;
+
+if(exist('data.data.file_ext', 'var'))
+    data.file_ext = handles.file_ext;
+else
+    data.file_ext = [];
+end
 
 save([handles.outputFolder, nameOut, '_data.mat'], 'data');
 
