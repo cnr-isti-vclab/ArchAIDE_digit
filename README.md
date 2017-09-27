@@ -33,12 +33,21 @@ REFERENCE:
 If you use the ArchAIDE Digit Tools in your work, please cite it using this reference:
 
 @InProceedings\{BIDWCDS17,
+
   author       = "Banterle, Francesco and Itkin, Barak  and Dellepiane, Matteo and Wolf, Lior and Callieri, Marco and Dershowitz, Nachum and Scopigno, Roberto",
+
   title        = "VASESKETCH: Automatic 3D Representation of Pottery from Paper Catalogue Drawings",
+
   booktitle    = "The 14th IAPR International Conference on Document Analysis and Recognition (ICDAR2017)",
+
   month        = "November",
+
   year         = "2017",
+
   publisher    = "IEEE",
+
   organization = "IEEE",
+
   url          = "http://vcg.isti.cnr.it/Publications/2017/BIDWCDS17"
+
 }
