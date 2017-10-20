@@ -56,12 +56,16 @@ fprintf(fid, '      </cc:Work>\n');
 fprintf(fid, '    </rdf:RDF>\n');
 fprintf(fid, '  </metadata>\n');
 
+bAxisIsNotEmpty = ~isempty(axis);
+
 if(~isempty(ip))
     writeLine(fid, ip, [255 0 0], 'inner_base_profile');
     writeCircle(fid, ip(1,1), ip(1,2), 5, 'rim_point');   
     
-    mouth_radius = abs(ip(1,1) - axis(1,1));
-    writeText(fid, 0, 24, ['mouth_radius: ', num2str(mouth_radius)]);
+    if(bAxisIsNotEmpty)
+        mouth_radius = abs(ip(1,1) - axis(1,1));
+        writeText(fid, 0, 24, ['mouth_radius: ', num2str(mouth_radius)]);
+    end
 end
 
 if(~isempty(op) & ~isempty(ip))
@@ -93,7 +97,7 @@ if(~isempty(handle_sec))
     writeLine(fid, handle_sec, [0 255 255], 'handle_section');
 end
 
-if(~isempty(axis))
+if(bAxisIsNotEmpty)
     writeLine(fid, axis, [0 0 255], 'axis');
 end
 

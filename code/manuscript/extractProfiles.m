@@ -285,39 +285,121 @@ if(bFracture)
     imshow(1 - lines);
     hold on;
     
-    p1 = round(ginput(1));
-    plot(p1(1), p1(2), 'r+');
+    while(1)
+        [p1x, p1y, button] = ginput(1);
+        
+        if(button == 3)
+           break; 
+        end
+        
+        p1 = [p1x p1y];
+        p1 = round(p1);
+        plot(p1(1), p1(2), 'ro');
 
-    p2 = round(ginput(1));
-    plot(p2(1), p2(2), 'r+');
-    
-    nIP = size(inside_profile, 1);
-    nOP = size(outside_profile, 1);
-    
-    [v1, indx1] = findClosestPointInProfile(inside_profile, p1);
-    [v2, indx2] = findClosestPointInProfile(inside_profile, p2);
-    
-    if(v1 < v2)
-        vCut = indx1;
-    else
-        vCut = indx2;
+        [p2x, p2y, button] = ginput(1);
+        p2 = [p2x p2y];
+        p2 = round(p2);
+        plot(p2(1), p2(2), 'r+');
+
+        [v_p1_ip, i_p1_ip] = findClosestPointInProfile(inside_profile, p1);
+        [v_p1_op, i_p1_op] = findClosestPointInProfile(outside_profile, p1);
+        
+        bS_p1 = 0;
+        index_p1 = -1;
+        if(v_p1_ip < v_p1_op)
+            index_p1 = i_p1_ip;
+            bS_p1 = 1;
+        else
+            index_p1 = i_p1_op;
+        end
+        
+        [v_p2_ip, i_p2_ip] = findClosestPointInProfile(inside_profile, p2);
+        [v_p2_op, i_p2_op] = findClosestPointInProfile(outside_profile, p2);        
+        
+        bS_p2 = 0;
+        index_p2 = -1;
+        if(v_p2_ip < v_p2_op)
+            index_p2 = i_p2_ip;
+            bS_p2 = 1;
+        else
+            index_p2 = i_p2_op;
+        end
+        
+        %cases
+        if(bS_p1 == 0 && bS_p2 == 0)
+            if(index_p1 > index_p2)
+                tmp = index_p1;
+                index_p1 = index_p2;
+                index_p2 = tmp;
+            end
+            
+            uncertain_profile = outside_profile(index_p1:index_p2,:);
+            
+            
+            if(index_p1 > 1)
+                op_s = outside_profile(1:(index_p1 - 1),:);
+                inside_profile = [flipud(op_s); inside_profile];
+            end
+            
+            outside_profile = outside_profile(index_p2:end,:);            
+        end
+        
+        if(bS_p1 == 1 && bS_p2 == 1)
+            if(index_p1 > index_p2)
+                tmp = index_p1;
+                index_p1 = index_p2;
+                index_p2 = tmp;
+            end
+            
+            uncertain_profile = inside_profile(index_p1:index_p2,:);
+            
+            
+            if(index_p1 > 1)
+                op_s = inside_profile((index_p2 + 1):end,:);
+                outside_profile = [outside_profile; flipud(op_s)];
+            end
+            
+            inside_profile = inside_profile(1:index_p1,:);            
+        end        
+        
+        if( (bS_p1 == 0 && bS_p2 == 1) || ...
+            (bS_p2 == 1 && bS_p1 == 0))
+        
+               
+        end 
+        
+        
+%         nIP = size(inside_profile, 1);
+%         nOP = size(outside_profile, 1);
+%
+%         [v1, indx1] = findClosestPointInProfile(inside_profile, p1);
+%         [v2, indx2] = findClosestPointInProfile(inside_profile, p2);
+% 
+%         if(v1 < v2)
+%             vCut = indx1;
+%         else
+%             vCut = indx2;
+%         end
+% 
+%         uncertain_profile = inside_profile((vCut + 1):end, :);    
+%         inside_profile = inside_profile(1:vCut, :);
+% 
+%         [v1, indx1] = findClosestPointInProfile(outside_profile, p1);
+%         [v2, indx2] = findClosestPointInProfile(outside_profile, p2);
+% 
+%         if(v1 < v2)
+%             vCut = indx1;
+%         else
+%             vCut = indx2;
+%         end
+% 
+%         uncertain_profile = [uncertain_profile; flipud(outside_profile((vCut + 1):end, :))];    
+%         outside_profile = outside_profile(1:vCut, :);
+                         
+        if(button == 3)
+            break;
+        end        
     end
-    
-    uncertain_profile = inside_profile((vCut + 1):end, :);    
-    inside_profile = inside_profile(1:vCut, :);
-    
-
-    [v1, indx1] = findClosestPointInProfile(outside_profile, p1);
-    [v2, indx2] = findClosestPointInProfile(outside_profile, p2);
-
-    if(v1 < v2)
-        vCut = indx1;
-    else
-        vCut = indx2;
-    end
-
-    uncertain_profile = [uncertain_profile; flipud(outside_profile((vCut + 1):end, :))];    
-    outside_profile = outside_profile(1:vCut, :);
     
     close(hf);
 end

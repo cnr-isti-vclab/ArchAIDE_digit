@@ -37,7 +37,7 @@ function varargout = digit(varargin)
 
 % Edit the above text to modify the response to help digit
 
-% Last Modified by GUIDE v2.5 20-Sep-2017 17:03:02
+% Last Modified by GUIDE v2.5 20-Oct-2017 17:28:24
 
 setlib;
 % Begin initialization code - DO NOT EDIT
@@ -171,7 +171,15 @@ if(~isempty(handles.img))
 
      %export as SVG
      outputFolder = [handles.outputFolder, '/'];
-     writeSVG([outputFolder, nameOut, '.svg'], inside_profile_mm, outside_profile_mm, handle_ip_mm, handle_op_mm, handle_section_mm, axis_profile_mm, ratio_mm_pixels, uncertain_profile_mm);
+     
+     if(get(handles.checkBoxDontExportRAxis, 'Value'))
+         axis_profile_mm = [];
+     end         
+         
+     writeSVG([outputFolder, nameOut, '.svg'], ...
+                inside_profile_mm, outside_profile_mm, ...
+                handle_ip_mm, handle_op_mm, handle_section_mm, ...
+                axis_profile_mm, ratio_mm_pixels, uncertain_profile_mm);
   
      handles.inside_profile_mm = inside_profile_mm;
      handles.outside_profile_mm = outside_profile_mm;
@@ -441,9 +449,9 @@ if(exist(name_data, 'file'))
     handles.dataFor3D = tmp.data.dataFor3D;
     handles.file_ext = tmp.data.file_ext;
     handles.bImageRescale = tmp.data.bImageRescale;
-    bImageRescale = handles.bImageRescale;
+    %handles.bImageRescale = handles.bImageRescale;
 else
-    bImageRescale = get(handles.checkResampleImage, 'Value');
+    handles.bImageRescale = get(handles.checkResampleImage, 'Value');
 
     outputFolder = [PathName(1:(end-1)), '_output/'];
     if(exist(outputFolder, 'dir') ~= 7)
@@ -480,7 +488,7 @@ end
 full_path = [PathName, FileName];
 img_tmp = double(imread(full_path)) / 255;
 
-[img_tmp, bS]  = imRescaleBinary(img_tmp, bImageRescale);
+[img_tmp, bS]  = imRescaleBinary(img_tmp, handles.bImageRescale);
 
 handles.img = img_tmp;
 handles.bS = bS;
@@ -527,3 +535,12 @@ function editCleaningIterations_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in checkBoxDontExportRAxis.
+function checkBoxDontExportRAxis_Callback(hObject, eventdata, handles)
+% hObject    handle to checkBoxDontExportRAxis (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkBoxDontExportRAxis
