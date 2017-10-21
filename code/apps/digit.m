@@ -158,7 +158,12 @@ if(~isempty(handles.img))
      end 
 
      inside_profile_mm = inside_profile * ratio_mm_pixels;
-     uncertain_profile_mm = uncertain_profile * ratio_mm_pixels;
+     uncertain_profile_mm = [];
+     for i=1:length(uncertain_profile)
+         tmp = uncertain_profile{i};
+         uncertain_profile_mm{i} = tmp * ratio_mm_pixels;
+     end
+     
      outside_profile_mm = outside_profile * ratio_mm_pixels;
      handle_ip_mm = handle_ip * ratio_mm_pixels;
      handle_op_mm = handle_op * ratio_mm_pixels;
@@ -268,8 +273,9 @@ drawAxis(handles.axis_profile);
 drawAxis(handles.scale_points);
 drawPolyLine(handles.handle_section, 'red');
 
-drawPolyLine(handles.uncertain_profile, 'magenta');
-
+for i=1:length(handles.uncertain_profile)
+    drawPolyLine(handles.uncertain_profile{i}, 'magenta');
+end
 
 set(handles.show_background, 'Value', value);
 

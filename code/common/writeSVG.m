@@ -102,7 +102,9 @@ if(bAxisIsNotEmpty)
 end
 
 if(~isempty(fracture_p))
-    writeLine(fid, fracture_p, [255 0 255], 'fracture');
+    for i=1:length(fracture_p)
+        writeLine(fid, fracture_p{i}, [255 0 255], ['fracture_', num2str(i)]);
+    end
 end
 
 writeText(fid, 0, 48, ['ratio_mm_pixels: ', num2str(scale_factor)]);

@@ -285,6 +285,7 @@ if(bFracture)
     imshow(1 - lines);
     hold on;
     
+    up_counter = 1;
     while(1)
         [p1x, p1y, button] = ginput(1);
         
@@ -333,8 +334,8 @@ if(bFracture)
                 index_p2 = tmp;
             end
             
-            uncertain_profile = outside_profile(index_p1:index_p2,:);
-            
+            uncertain_profile{up_counter} = outside_profile(index_p1:index_p2,:);
+            up_counter = up_counter + 1;
             
             if(index_p1 > 1)
                 op_s = outside_profile(1:(index_p1 - 1),:);
@@ -351,7 +352,8 @@ if(bFracture)
                 index_p2 = tmp;
             end
             
-            uncertain_profile = inside_profile(index_p1:index_p2,:);
+            uncertain_profile{up_counter} = inside_profile(index_p1:index_p2,:);
+            up_counter = up_counter + 1;
             
             
             if(index_p1 > 1)

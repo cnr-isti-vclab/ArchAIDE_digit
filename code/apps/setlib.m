@@ -17,11 +17,10 @@ if(ismac())
     setenv('DYLD_LIBRARY_PATH',['/usr/local/lib/:' getenv('DYLD_LIBRARY_PATH')]);
 end
 
-try 
-
-    addpath('../common/', '-begin');
-    addpath('../manuscript/', '-begin');
-
-catch expr
-    disp(expr);
-end
+% try 
+%     addpath('../common/', '-begin');
+%     addpath('../manuscript/', '-begin');
+% 
+% catch expr
+%     disp(expr);
+% end
