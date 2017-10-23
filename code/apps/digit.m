@@ -402,7 +402,7 @@ if(handles.folder_flag)
     n = length(handles.lst);
     handles.counter = handles.counter + 1;
     if(handles.counter <= n)
-        handles = InitImage([handles.PathName, '/'], handles.lst(handles.counter).name, handles);        
+        handles = InitImage(handles.PathName, handles.lst(handles.counter).name, handles);        
         drawThings(hObject, eventdata, handles);
        
         guidata(hObject, handles);
