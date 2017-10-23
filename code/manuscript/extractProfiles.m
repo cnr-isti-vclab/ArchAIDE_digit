@@ -326,49 +326,137 @@ if(bFracture)
             index_p2 = i_p2_op;
         end
         
-        %cases
+        %CASE I: both start and end are in the outside profile
         if(bS_p1 == 0 && bS_p2 == 0)
+            disp('Case I');
             if(index_p1 > index_p2)
-                tmp = index_p1;
+                tmp_swap = index_p1;
                 index_p1 = index_p2;
-                index_p2 = tmp;
+                index_p2 = tmp_swap;
             end
             
             uncertain_profile{up_counter} = outside_profile(index_p1:index_p2,:);
             up_counter = up_counter + 1;
             
-            if(index_p1 > 1)
-                op_s = outside_profile(1:(index_p1 - 1),:);
-                inside_profile = [flipud(op_s); inside_profile];
+            op_s_c1 = outside_profile(1:(index_p1 - 1),:);
+            op_s_c2 = outside_profile((index_p2 + 1):end,:);
+            
+            if(size(op_s_c1, 1) < size(op_s_c2, 1))
+                tmp_swap = op_s_c1;
+                op_s_c1 = op_s_c2;
+                op_s_c2 = tmp_swap;
             end
             
-            outside_profile = outside_profile(index_p2:end,:);            
+            d_c2_1 = sum((op_s_c2(1,:) - inside_profile(1,:)).^2);
+            d_c2_end = sum((op_s_c2(1,:) - inside_profile(end,:)).^2);
+            
+            if(d_c2_1 < d_c2_end)
+                inside_profile = [flipud(op_s_c2); inside_profile];            
+            else
+                inside_profile = [inside_profile; flipud(op_s_c2)];                            
+            end
+            
+            outside_profile = op_s_c1;            
         end
         
+        %CASE II: both start and end are in the inside profile
         if(bS_p1 == 1 && bS_p2 == 1)
+            disp('CASE II');
             if(index_p1 > index_p2)
-                tmp = index_p1;
+                tmp_swap = index_p1;
                 index_p1 = index_p2;
-                index_p2 = tmp;
+                index_p2 = tmp_swap;
             end
             
             uncertain_profile{up_counter} = inside_profile(index_p1:index_p2,:);
             up_counter = up_counter + 1;
             
+            op_s_c1 = inside_profile(1:(index_p1 - 1),:);
+            op_s_c2 = inside_profile((index_p2 + 1):end,:);
             
-            if(index_p1 > 1)
-                op_s = inside_profile((index_p2 + 1):end,:);
-                outside_profile = [outside_profile; flipud(op_s)];
+            if(size(op_s_c1, 1) < size(op_s_c2, 1))
+                tmp_swap = op_s_c1;
+                op_s_c1 = op_s_c2;
+                op_s_c2 = tmp_swap;
             end
             
-            inside_profile = inside_profile(1:index_p1,:);            
+            d_c2_1 = sum((op_s_c2(1,:) - outside_profile(1,:)).^2);
+            d_c2_end = sum((op_s_c2(1,:) - outside_profile(end,:)).^2);
+            
+            if(d_c2_1 < d_c2_end)
+                outside_profile = [flipud(op_s_c2); outside_profile];            
+            else
+                outside_profile = [outside_profile; flipud(op_s_c2)];                            
+            end
+            
+            inside_profile = op_s_c1;                      
         end        
         
-        if( (bS_p1 == 0 && bS_p2 == 1) || ...
-            (bS_p2 == 1 && bS_p1 == 0))
-        
+        %CASE III: start is in the inside profile  and end is in the outside profile
+        if( (bS_p1 == 1 && bS_p2 == 0))
+            disp('CASE III');         
                
+            %we have to find out ccw or cw
+            ccw = 0;
+            ip_c1 = inside_profile(1:index_p1,:);
+            ip_c2 = inside_profile((index_p1+1):end,:);
+
+            op_c1 = outside_profile(1:index_p2,:);
+            op_c2 = outside_profile((index_p2+1):end,:);
+            
+            if(size(ip_c1, 1) < size(ip_c2, 1))
+                ccw = 1;
+            end
+            
+            if(ccw) 
+                uncertain_profile{up_counter} = [flipud(ip_c1); op_c1];
+                up_counter = up_counter + 1;
+                
+                outside_profile = op_c2;   
+                inside_profile = ip_c2;
+            else
+                 uncertain_profile{up_counter} = [ip_c2; flipud(op_c2)];   
+                 up_counter = up_counter + 1;
+                 
+                 outside_profile = op_c1;    
+                 inside_profile = ip_c1;
+            end
+                                  
         end 
+        
+        %CASE IV: start is in the outside profile  and end is in the inside profile
+        if( (bS_p1 == 0 && bS_p2 == 1))
+            
+            disp('CASE IV');         
+            disp('CASE III');         
+               
+            %we have to find out ccw or cw
+            ccw = 0;
+            op_c1 = outside_profile(1:index_p1,:);
+            op_c2 = outside_profile((index_p1+1):end,:);
+
+            ip_c1 = inside_profile(1:index_p2,:);
+            ip_c2 = inside_profile((index_p2+1):end,:);
+            
+            if(size(op_c1, 1) < size(op_c2, 1))
+                ccw = 1;
+            end
+            
+            if(ccw) 
+                uncertain_profile{up_counter} = [flipud(op_c1); ip_c1];
+                up_counter = up_counter + 1;
+                
+                outside_profile = op_c2;   
+                inside_profile = ip_c2;
+             else
+                  uncertain_profile{up_counter} = [op_c2; flipud(ip_c2)];   
+                  up_counter = up_counter + 1;
+                  
+                  outside_profile = op_c1;    
+                  inside_profile = ip_c1;
+            end               
+            
+        end         
         
         
 %         nIP = size(inside_profile, 1);
