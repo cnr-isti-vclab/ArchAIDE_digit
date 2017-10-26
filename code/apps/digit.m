@@ -37,7 +37,7 @@ function varargout = digit(varargin)
 
 % Edit the above text to modify the response to help digit
 
-% Last Modified by GUIDE v2.5 20-Oct-2017 17:28:24
+% Last Modified by GUIDE v2.5 26-Oct-2017 15:19:06
 
 setlib;
 % Begin initialization code - DO NOT EDIT
@@ -118,10 +118,13 @@ if(~isempty(handles.img))
      
      cleaningIterations = str2num(get(handles.editCleaningIterations, 'String'));
 
+
+     bLid = get(handles.checkboxLid, 'Value');
+     
      disp('Exctraction of profiles');
      tic          
      [inside_profile, outside_profile, handle_ip, handle_op, axis_profile, labels, uncertain_profile] = ... 
-         extractProfiles(handles.img, bMPC, bFlip, bAxis, bHandles, bFracture, cleaningIterations, 0);
+         extractProfiles(handles.img, bMPC, bFlip, bAxis, bHandles, bFracture, cleaningIterations, 0, bLid);
      handles.labels = labels;
      toc
 
@@ -491,7 +494,11 @@ else
     handles.dataFor3D = 0;
 end
 
-full_path = [PathName, FileName];
+if(PathName(end) ~= '/')
+    full_path = [PathName, '/', FileName];
+else
+    full_path = [PathName, FileName];
+end
 img_tmp = double(imread(full_path)) / 255;
 
 [img_tmp, bS]  = imRescaleBinary(img_tmp, handles.bImageRescale);
@@ -550,3 +557,12 @@ function checkBoxDontExportRAxis_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkBoxDontExportRAxis
+
+
+% --- Executes on button press in checkboxLid.
+function checkboxLid_Callback(hObject, eventdata, handles)
+% hObject    handle to checkboxLid (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkboxLid

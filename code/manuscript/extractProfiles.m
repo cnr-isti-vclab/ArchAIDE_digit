@@ -1,8 +1,9 @@
-function [inside_profile, outside_profile, handle_ip, handle_op, axis_output, labels, uncertain_profile] = extractProfiles(img, bMPC, bFlip, bAxis, bHandles, bFracture, cleaningIterations, bDebug)
+function [inside_profile, outside_profile, handle_ip, handle_op, axis_output, labels, uncertain_profile] = ...
+    extractProfiles(img, bMPC, bFlip, bAxis, bHandles, bFracture, cleaningIterations, bDebug, bLid)
 %
 %
 %       [inside_profile, outside_profile, handle_ip, handle_op, axis_output, labels, uncertain_profile] =
-%           extractProfiles(img, bMPC, bFlip, bAxis, bHandles, bFracture, cleaningIterations, bDebug)
+%           extractProfiles(img, bMPC, bFlip, bAxis, bHandles, bFracture, cleaningIterations, bDebug, bLid)
 %
 %
 % Digit
@@ -41,6 +42,10 @@ end
 
 if(~exist('bDebug', 'var'))
     bDebug = 0;
+end
+
+if(~exist('bLid', 'var'))
+    bLid = 0;
 end
 
 outside_profile = [];
@@ -268,10 +273,12 @@ if(isempty(handle_ip))%base point
 end
 
 %case lid
-% [~,index] = max(abs(outside_profile(:,2)));
-% tmp = outside_profile((index+1):end,:);
-% outside_profile((index+1):end,:) = [];
-% inside_profile = [inside_profile; flipud(tmp)];
+if(bLid)
+    [~,index] = max(abs(outside_profile(:,2)));
+    tmp = outside_profile((index+1):end,:);
+    outside_profile((index+1):end,:) = [];
+    inside_profile = [inside_profile; flipud(tmp)];
+end
 
 %remove axis from profile
 inside_profile = removePointsCloseToAxis(inside_profile, y_axis, 16);
@@ -334,29 +341,38 @@ if(bFracture)
                 index_p1 = index_p2;
                 index_p2 = tmp_swap;
             end
-            
-            uncertain_profile{up_counter} = outside_profile(index_p1:index_p2,:);
-            up_counter = up_counter + 1;
-            
+                        
+            op_s_c1_c2 = outside_profile(index_p1:index_p2,:);
             op_s_c1 = outside_profile(1:(index_p1 - 1),:);
             op_s_c2 = outside_profile((index_p2 + 1):end,:);
             
-            if(size(op_s_c1, 1) < size(op_s_c2, 1))
-                tmp_swap = op_s_c1;
-                op_s_c1 = op_s_c2;
-                op_s_c2 = tmp_swap;
-            end
-            
-            d_c2_1 = sum((op_s_c2(1,:) - inside_profile(1,:)).^2);
-            d_c2_end = sum((op_s_c2(1,:) - inside_profile(end,:)).^2);
-            
-            if(d_c2_1 < d_c2_end)
-                inside_profile = [flipud(op_s_c2); inside_profile];            
+            if(size(op_s_c1_c2, 1) > (size(op_s_c1, 1) + size(op_s_c2, 1)))
+                outside_profile = op_s_c1_c2;
+                
+                
             else
-                inside_profile = [inside_profile; flipud(op_s_c2)];                            
+                if(size(op_s_c1, 1) < size(op_s_c2, 1))
+                    tmp_swap = op_s_c1;
+                    op_s_c1 = op_s_c2;
+                    op_s_c2 = tmp_swap;
+                end
+
+                uncertain_profile{up_counter} = op_s_c1_c2;
+                up_counter = up_counter + 1;
+
+
+                d_c2_1 = sum((op_s_c2(1,:) - inside_profile(1,:)).^2);
+                d_c2_end = sum((op_s_c2(1,:) - inside_profile(end,:)).^2);
+
+                if(d_c2_1 < d_c2_end)
+                    inside_profile = [flipud(op_s_c2); inside_profile];            
+                else
+                    inside_profile = [inside_profile; flipud(op_s_c2)];                            
+                end
+
+                outside_profile = op_s_c1;                   
             end
-            
-            outside_profile = op_s_c1;            
+                     
         end
         
         %CASE II: both start and end are in the inside profile
