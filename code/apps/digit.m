@@ -519,6 +519,10 @@ function file_menu_open_folder_Callback(hObject, eventdata, handles)
 file_ext = getExt(FileName);
 handles.lst = dir([PathName, '*.', file_ext]);
 
+if(exist('output') ~= 7)
+   mkdir('output'); 
+end
+
 handles = InitImage(PathName, handles.lst(1).name, handles);
 
 handles.counter = 1;

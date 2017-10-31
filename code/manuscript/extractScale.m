@@ -109,6 +109,8 @@ try
         len = sqrt((scale(1,2) - scale(2,2)).^2 + (scale(1,1) - scale(2,1)).^2);
         scale_points = scale;
         
+        disp(['-- Pixels: ', num2str(len)]);
+        
         %ratio
         if(length(val) < 2)
             mm = val(1);

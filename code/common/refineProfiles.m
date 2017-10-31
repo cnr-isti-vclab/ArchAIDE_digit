@@ -66,9 +66,10 @@ for i=1:maxIterations
     
 end
 
-op_handle = op_handle(f_oh_i:end, :);
-op_mouth = op_mouth(1:f_om_i, :);
-    
+if(f_om_i > -1 & f_oh_i > -1)
+    op_handle = op_handle(f_oh_i:end, :);
+    op_mouth = op_mouth(1:f_om_i, :);
+end
 
 end
 
