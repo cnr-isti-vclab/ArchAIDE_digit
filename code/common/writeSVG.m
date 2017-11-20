@@ -60,6 +60,11 @@ bAxisIsNotEmpty = ~isempty(axis);
 
 if(~isempty(ip))
     writeLine(fid, ip, [255 0 0], 'inner_base_profile');
+    
+    if(ip(1,2) > ip(end,2))
+       ip = flipud(ip); 
+    end
+    
     writeCircle(fid, ip(1,1), ip(1,2), 5, 'rim_point');   
     
     if(bAxisIsNotEmpty)
