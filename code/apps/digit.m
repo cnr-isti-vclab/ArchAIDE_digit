@@ -141,24 +141,22 @@ if(~isempty(handles.img))
              extractScale(handles.img, inside_profile, outside_profile, handles.bS);
          toc
      end
-     
-     
-     
+            
      handle_section = [];
 
-     if(~isempty(handle_ip) | ~isempty(handle_op))
-         disp('Exctraction of handle section');
-         tic
-         
-        value = get(handles.checkExtractHandleSection, 'Value');
-        if(value > 0.5)
-            handle_section =  extractHandleSection(handles.labels, 0);
-        else
-            handle_section = [];
-        end
+     %if(~isempty(handle_ip) | ~isempty(handle_op))
 
+     bHandleSection = get(handles.checkExtractHandleSection, 'Value');
+     if(bHandleSection)
+        disp('Exctraction of handle section');
+        
+        tic
+            handle_section =  extractHandleSection(handles.labels, 0);
         toc
-     end 
+
+     else         
+         handle_section = [];        
+     end
 
      inside_profile_mm = inside_profile * ratio_mm_pixels;
      uncertain_profile_mm = [];
@@ -517,6 +515,7 @@ function file_menu_open_folder_Callback(hObject, eventdata, handles)
 [FileName, PathName,~] = uigetfile('*.*', 'Select a pottery file...');
 
 file_ext = getExt(FileName);
+
 handles.lst = dir([PathName, '*.', file_ext]);
 
 if(exist('output') ~= 7)

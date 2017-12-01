@@ -212,43 +212,47 @@ if(bHandles)
         end
 
         if(lst_index_max > 0)
-
             handle_mask = zeros(size(img));
             handle_mask(labels == lst(lst_index_max)) = 1;
-
-            labels(labels == lst(lst_index_max)) = 0;
 
             handle_lines = bwmorph(handle_mask, 'remove');
             handle_lines = bwmorph(handle_lines, 'thin');
 
             [y, x] = find(handle_lines > 0.5);
 
-            [~, indx] = findClosestPointInProfile([x,y], outside_profile(1,:));
+            [v_distance, indx] = findClosestPointInProfile([x,y], outside_profile(1,:));
+            v_distance = sqrt(v_distance);
 
             [y_max, ~] = max(y);
 
-            handle_profile = lineCrawlerGen(handle_lines, x(indx), y(indx), y_max + 1);
+            if(v_distance < 40)                          
+                labels(labels == lst(lst_index_max)) = 0;
 
-            if(~isempty(handle_profile))
-                orientation = getPolylineOrientation(handle_profile, 5);
+                handle_profile = lineCrawlerGen(handle_lines, x(indx), y(indx), y_max + 1);
 
-                if(~orientation)
-                    handle_profile = flipud(handle_profile);
+                if(~isempty(handle_profile))
+                    orientation = getPolylineOrientation(handle_profile, 5);
+
+                    if(~orientation)
+                        handle_profile = flipud(handle_profile);
+                    end
+
+                    [~, index_min] = max(handle_profile(:,2));
+
+                    handle_op = handle_profile(1:index_min,:);
+
+                    handle_ip_t = handle_profile((index_min + 1):(end - 1),:);
+                    handle_ip_t = flipud(handle_ip_t);
+
+                    handle_ip = fixInternalHandleProfile(handle_ip_t, outside_profile);
+
+                    %attach the ip and op profiles of the handle to the outisde profile
+                    handle_ip = attachInternalProfileToOP(handle_ip, outside_profile);
+                    handle_op = attachOutsideProfileToOP(handle_op, outside_profile, 1);
                 end
-
-                [~, index_min] = max(handle_profile(:,2));
-
-                handle_op = handle_profile(1:index_min,:);
-
-                handle_ip_t = handle_profile((index_min + 1):(end - 1),:);
-                handle_ip_t = flipud(handle_ip_t);
-
-                handle_ip = fixInternalHandleProfile(handle_ip_t, outside_profile);
-
-                %attach the ip and op profiles of the handle to the outisde profile
-                handle_ip = attachInternalProfileToOP(handle_ip, outside_profile);
-                handle_op = attachOutsideProfileToOP(handle_op, outside_profile, 1);
-            end
+            else
+                %this is probably a handle section!
+           end
         end
     end
 end
