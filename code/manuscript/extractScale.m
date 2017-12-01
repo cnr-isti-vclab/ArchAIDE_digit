@@ -36,8 +36,8 @@ y_crop = (y_max + 1);
 img_crop = img(y_crop:end,:);
 
 %extract the checkboard main line
-tmpLine = imPreprocessingClean( img_crop, 1);
-scale = getMainLine( bwmorph(logical(1 - tmpLine), 'remove'), 0);
+%tmpLine = imPreprocessingClean( img_crop, 1);
+scale = getMainLine( bwmorph(logical(1 - img_crop), 'remove'), 0);
 
 %extract the text
 img_crop = imPreprocessingClean( img_crop, 0);

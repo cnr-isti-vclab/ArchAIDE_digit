@@ -59,7 +59,7 @@ for k = 1:length(lines)
           xy_long = xy;
        end
    else
-       if(len > max_len)
+       if(len > max_len &  (dx > dy))
           max_len = len;
           xy_long = xy;
        end

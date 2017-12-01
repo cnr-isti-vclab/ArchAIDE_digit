@@ -1,7 +1,7 @@
-function img_bw  = imBinary( img, bFiltering)
+function downsampleBatch(format)
 %
 %
-%       img_bw  = imBinary( img, bFiltering )
+%      downsampleBatch(format)
 %
 %
 % Digit
@@ -18,24 +18,15 @@ function img_bw  = imBinary( img, bFiltering)
 % file, You can obtain one at http://mozilla.org/MPL/2.0/.
 %
 
-if(~exist('bFiltering', 'var'))
-    bFiltering = 1;
+lst = dir(['*.', format]);
+
+for i=1:length(lst)
+    disp(lst(i).name);
+    img = double(imread(lst(i).name)) / 255.0;
+    imgOut = downsampleHighRes(img);
+    
+    name = RemoveExt(lst(i).name);
+    imwrite(imgOut, [name, '_downsampled.', format]);
 end
 
-img = imContrast(img);
-
-if(bFiltering)
-    for i=1:8
-        img = bilateralFilter(img, [], 0.0, 1.0, 16, 0.05);
-    end
 end
-
-img_bw = img;
-min_v = min(img_bw(:));
-max_v = max(img_bw(:));
-mean_v = (min_v + max_v ) / 2.0;
-img_bw(img_bw >= mean_v) = 1.0;
-img_bw(img_bw < mean_v) = 0.0;
-
-end
-

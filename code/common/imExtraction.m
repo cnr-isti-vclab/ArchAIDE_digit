@@ -48,7 +48,11 @@ lines = bwmorph(logical(1 - img_bw_o), 'remove');
 if(~bAxis)
     lines = bwmorph(logical(1 - img_bw_o), 'remove');
     axis_output = getMainLine( lines );
-    axis_output(:,1) = round((axis_output(1,1) + axis_output(2,1)) / 2);
+    if(isempty(axis_output))
+        bAxis = 0;
+    else
+        axis_output(:,1) = round((axis_output(1,1) + axis_output(2,1)) / 2);
+    end
 end
 
 if(bAxis || isempty(axis_output))
