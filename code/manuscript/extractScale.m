@@ -60,8 +60,10 @@ for i=1:size(img_crop,1)
 end
 
 
-if(index > 0)
-    img_crop = img_crop(1:(index - 10),:);
+if(index > 0)    
+    min_s = round(scale(1,1) * 0.85);
+    max_s = round(scale(2,1) * 1.15);    
+    img_crop = img_crop(:,min_s:max_s);
 end
 
 try
@@ -74,7 +76,7 @@ try
     
     imwrite(1 - img_crop, 'output/tmp.png');
 
-    dos('/usr/local/Cellar/tesseract/3.04.00/bin/tesseract output/tmp.png output -l osd  -psm 7');
+    dos('/usr/local/Cellar/tesseract/3.05.01/bin/tesseract output/tmp.png output -l eng  -psm 3');
 
     fid = fopen('output.txt', 'r');
     str =fscanf(fid, '%s');
@@ -140,11 +142,13 @@ end
 end
 
 function str = removeGarbageCharacters(str)
-   play_book = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+   play_book = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789,.';
    
    for i=1:length(str)
         if(isempty(findstr(play_book, str(i))))
             str(i) =' ';
         end
    end
+   
+   str = strrep(str, ',', '.');   
 end
