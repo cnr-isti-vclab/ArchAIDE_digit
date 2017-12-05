@@ -225,7 +225,7 @@ if(bHandles)
 
             [y_max, ~] = max(y);
 
-            v_distance_thr = size(img, 2) * 0.15;
+            v_distance_thr = size(img, 2) * 0.05;
             
             if(v_distance < v_distance_thr)                          
                 labels(labels == lst(lst_index_max)) = 0;

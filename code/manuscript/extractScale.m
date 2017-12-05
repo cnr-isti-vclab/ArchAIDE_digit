@@ -62,7 +62,10 @@ end
 
 if(index > 0)    
     min_s = round(scale(1,1) * 0.85);
-    max_s = round(scale(2,1) * 1.15);    
+    max_s = round(scale(2,1) * 1.15); 
+    
+    min_s = max([min_s, 1]);
+    max_s = min([max_s, size(img_crop, 2)]);
     img_crop = img_crop(:,min_s:max_s);
 end
 
@@ -74,10 +77,12 @@ try
         img_crop = imerode(img_crop, ones(3));
     end
     
-    imwrite(1 - img_crop, 'output/tmp.png');
+    imwrite(1 - img_crop, 'tesseract_tmp.png');
 
-    dos('/usr/local/Cellar/tesseract/3.05.01/bin/tesseract output/tmp.png output -l eng  -psm 3');
+    dos('/usr/local/Cellar/tesseract/3.05.01/bin/tesseract output/tesseract_tmp.png output -l eng  -psm 3');
 
+    delete('tesseract_tmp.png');
+    
     fid = fopen('output.txt', 'r');
     str =fscanf(fid, '%s');
     fclose(fid);
@@ -134,6 +139,8 @@ try
     else
         disp('-- There is no scale!');
     end
+        
+    delete('output.txt');
     
 catch expr
     disp(expr);

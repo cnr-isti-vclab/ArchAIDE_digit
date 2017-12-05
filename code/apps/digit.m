@@ -37,7 +37,7 @@ function varargout = digit(varargin)
 
 % Edit the above text to modify the response to help digit
 
-% Last Modified by GUIDE v2.5 26-Oct-2017 15:19:06
+% Last Modified by GUIDE v2.5 05-Dec-2017 16:18:22
 
 setlib;
 % Begin initialization code - DO NOT EDIT
@@ -135,11 +135,19 @@ if(~isempty(handles.img))
      %Conspectus:ratio_mm_pixels = 330 / 1730;
      ratio_mm_pixels = str2double(get(handles.editMMperPixel, 'String'));
      
-     if(ratio_mm_pixels <= 1e-6)
-         tic          
-         [scale_points, ratio_mm_pixels] = ...
-             extractScale(handles.img, inside_profile, outside_profile, handles.bS);
-         toc
+     if(ratio_mm_pixels <= 1e-6)                       
+         bSetScale = get(handles.setScale, 'Value');
+
+         if(~bSetScale)        
+             tic
+             [scale_points, ratio_mm_pixels] = ...
+                 extractScale(handles.img, inside_profile, outside_profile, handles.bS);
+             toc
+         else             
+             scaleValue_in_cm = str2num(get(handles.scaleValue, 'String'));
+             [scale_points, ratio_mm_pixels] = ...
+                 extractScaleUI(handles.img, scaleValue_in_cm);
+         end
      end
             
      handle_section = [];
@@ -151,7 +159,7 @@ if(~isempty(handles.img))
         disp('Exctraction of handle section');
         
         tic
-            handle_section =  extractHandleSection(handles.labels, 0);
+            handle_section = extractHandleSection(handles.labels, 0);
         toc
 
      else         
@@ -518,9 +526,6 @@ file_ext = getExt(FileName);
 
 handles.lst = dir([PathName, '*.', file_ext]);
 
-if(exist('output') ~= 7)
-   mkdir('output'); 
-end
 
 handles = InitImage(PathName, handles.lst(1).name, handles);
 
@@ -569,3 +574,70 @@ function checkboxLid_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of checkboxLid
+
+
+% --- Executes on button press in setScale.
+function setScale_Callback(hObject, eventdata, handles)
+% hObject    handle to setScale (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of setScale
+
+
+
+function scaleValue_Callback(hObject, eventdata, handles)
+% hObject    handle to scaleValue (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of scaleValue as text
+%        str2double(get(hObject,'String')) returns contents of scaleValue as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function scaleValue_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to scaleValue (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in previousFolder.
+function previousFolder_Callback(hObject, eventdata, handles)
+% hObject    handle to previousFolder (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+if(handles.folder_flag)
+    n = length(handles.lst);
+    handles.counter = handles.counter - 1;
+    if(handles.counter <= n)
+        handles = InitImage(handles.PathName, handles.lst(handles.counter).name, handles);        
+        drawThings(hObject, eventdata, handles);
+       
+        guidata(hObject, handles);
+        set(handles.show_background, 'Value', 1.0);    
+    end
+else
+    j = -1;
+    n = length(handles.lst);
+
+    for i=1:n
+        if(strcmp(handles.file_name, handles.lst(i).name) == 1)
+            j = i - 1; 
+            break;
+        end
+    end
+
+    if(j > 1 & j < n)
+        handles = InitImage(handles.PathName, handles.lst(j - 1).name, handles);
+        guidata(hObject, handles);
+        set(handles.show_background, 'Value', 1.0);    
+    end
+end
