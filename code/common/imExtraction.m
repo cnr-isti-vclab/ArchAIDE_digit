@@ -87,7 +87,7 @@ for i=1:n
     indx = find(labels == lst(i));
 
     l_size = length(indx);
-    if(l_size < (nPixels * perCent))
+    if(l_size < (nPixels * perCent))        
         img_bw(indx) = 0;
         labels(indx) = 0;
     end  
@@ -104,11 +104,11 @@ lst_index_max = -1;
 for i=1:n    
     mt = zeros(r, c);
     mt(labels == lst(i)) = 1;
-    [yr,xc] = find(mt > 0.5);
+    [yr, xc] = find(mt > 0.5);
 
     dist = ((yr - x_axis).^2 + (xc - y_axis).^2);
-    distindex = find(yr <= y_axis);
-    
+    distindex = find(yr <= x_axis);
+
     sign_label = mean(xc - y_axis);
 
     if(~isempty(distindex) & sign_label < 0)        
@@ -118,7 +118,7 @@ for i=1:n
             l_size_max = v;
             lst_index_max = i;
         end
-    end        
+    end
 end
 
 img_bw = zeros(r, c);
@@ -129,6 +129,7 @@ end
 if(bDebug)
     figure(31);
     imshow(labels);
+
     figure(33);
     imshow(img_bw);
 end

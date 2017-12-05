@@ -67,7 +67,6 @@ else
 end
 
 
-
 if(~isempty(ip))
     d = abs(ip(:,1) - y_axis);  
     
