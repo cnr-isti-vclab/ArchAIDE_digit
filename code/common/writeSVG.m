@@ -1,7 +1,7 @@
-function writeSVG(name, ip, op, handle_ip, handle_op, handle_sec, axis, scale_factor, fracture_p)
+function writeSVG(name, ip, op, handle_ip, handle_op, handle_sec, axis, scale_factor, fracture_p, bPoints)
 %
 %
-%       writeSVG(name, ip, op, handle_ip, handle_op, handle_sec, axis, scale_factor, fracture_p)
+%       writeSVG(name, ip, op, handle_ip, handle_op, handle_sec, axis, scale_factor, fracture_p, bPoints)
 %
 %
 % Digit
@@ -24,6 +24,10 @@ end
 
 if(~exist('fracture_p', 'var'))
     fracture_p = [];
+end
+
+if(~exist('bPoints', 'var'))
+    bPoints = 1;
 end
 
 fid = fopen(name, 'w');
@@ -65,8 +69,10 @@ if(~isempty(ip))
        ip = flipud(ip); 
     end
     
-    writeCircle(fid, ip(1,1), ip(1,2), 5, 'rim_point');   
-    
+    if(bPoints)
+        writeCircle(fid, ip(1,1), ip(1,2), 5, 'rim_point');   
+    end
+
     if(bAxisIsNotEmpty)
         mouth_radius = abs(ip(1,1) - axis(1,1));
         writeText(fid, 0, 24, ['mouth_radius: ', num2str(mouth_radius)]);
@@ -76,18 +82,20 @@ end
 if(~isempty(op) & ~isempty(ip))
     writeLine(fid, op, [0 255 0], 'outer_base_profile');
 
-    %check if base point is close to the axis
-%    if(abs(op(end,1) - axis(1,1)) < 8)
-    
-    [v_op, ind_op] = max(op(:,2));
-    [v_ip, ind_ip] = max(ip(:,2));
-    
-    if(v_op > v_ip)
-        writeCircle(fid, op(ind_op,1), op(ind_op,2), 5, 'base_point');     
-    else
-        writeCircle(fid, ip(ind_ip,1), ip(ind_ip,2), 5, 'base_point');             
+    if(bPoints)
+        %check if base point is close to the axis
+    %    if(abs(op(end,1) - axis(1,1)) < 8)
+
+        [v_op, ind_op] = max(op(:,2));
+        [v_ip, ind_ip] = max(ip(:,2));
+
+        if(v_op > v_ip)
+            writeCircle(fid, op(ind_op,1), op(ind_op,2), 5, 'base_point');     
+        else
+            writeCircle(fid, ip(ind_ip,1), ip(ind_ip,2), 5, 'base_point');             
+        end
+    %    end
     end
-%    end
 end
 
 if(~isempty(handle_ip))
