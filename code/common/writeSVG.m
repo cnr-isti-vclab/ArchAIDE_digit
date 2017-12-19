@@ -18,7 +18,7 @@ function writeSVG(name, ip, op, handle_ip, handle_op, handle_sec, axis, scale_fa
 % file, You can obtain one at http://mozilla.org/MPL/2.0/.
 %
 
-if(isempty(ip) | isempty(op))
+if(isempty(ip) & isempty(op))
    return; 
 end
 
