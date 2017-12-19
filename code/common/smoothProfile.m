@@ -18,6 +18,8 @@ function out = smoothProfile(profile, lambda)
 % file, You can obtain one at http://mozilla.org/MPL/2.0/.
 %
 
+out = profile;
+
 if(size(profile, 1) < 32)
     return;
 end
@@ -31,8 +33,6 @@ n = size(profile, 1);
 if(n < 3)
     return;
 end
-
-out = profile;
 
 for i=2:(n - 1)
     p1 = profile(i - 1, :);
