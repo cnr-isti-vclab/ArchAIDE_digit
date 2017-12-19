@@ -18,6 +18,10 @@ function out = smoothProfile(profile, lambda)
 % file, You can obtain one at http://mozilla.org/MPL/2.0/.
 %
 
+if(size(profile, 1) < 32)
+    return;
+end
+
 if(~exist('lambda', 'var'))
     lambda = 0.5;
 end
