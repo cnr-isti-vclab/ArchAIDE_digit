@@ -27,11 +27,12 @@ DEPENDENCIES:
 =============
 
 This software uses some functions from the HDR Toolbox that can be downloaded at either:
+
 http://www.advancedhdrbook.com/
+
 or:
+
 https://github.com/banterle/HDR_Toolbox
-
-
 
 LICENSE:
 ========
