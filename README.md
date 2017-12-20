@@ -23,6 +23,16 @@ HOW TO INSTALL:
 
 4) Write the command install in the Command Window, and wait for the installation process to end.
 
+DEPENDENCIES:
+=============
+
+This software uses some functions from the HDR Toolbox that can be downloaded at either:
+http://www.advancedhdrbook.com/
+or:
+https://github.com/banterle/HDR_Toolbox
+
+
+
 LICENSE:
 ========
 ArchAIDE Digit Tools are distributed under the MPL 2.0 license: https://www.mozilla.org/MPL/2.0/
