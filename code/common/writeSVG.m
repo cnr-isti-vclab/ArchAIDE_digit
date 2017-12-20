@@ -38,7 +38,7 @@ if(~isempty(ip))
     width = max([width tmp]);
     
     tmp = round(max(ip(:,2)));
-    height = max([width height]);
+    height = max([height tmp]);
 end
 
 if(~isempty(op))
@@ -46,7 +46,7 @@ if(~isempty(op))
     width = max([width tmp]);
     
     tmp = round(max(op(:,2)));
-    height = max([width height]);
+    height = max([height tmp]);
 end
 
 fid = fopen(name, 'w');
