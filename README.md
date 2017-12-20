@@ -26,11 +26,11 @@ HOW TO INSTALL:
 DEPENDENCIES:
 =============
 
-This software uses some functions from the HDR Toolbox that can be downloaded at either:
+This software uses some functions from the HDR Toolbox that can be downloaded at
 
 http://www.advancedhdrbook.com/
 
-or:
+or
 
 https://github.com/banterle/HDR_Toolbox
 
