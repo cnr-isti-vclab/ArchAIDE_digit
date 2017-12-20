@@ -30,6 +30,25 @@ if(~exist('bPoints', 'var'))
     bPoints = 1;
 end
 
+width = -1;
+height = -1;
+
+if(~isempty(ip))
+    tmp = round(max(ip(:,1)));
+    width = max([width tmp]);
+    
+    tmp = round(max(ip(:,2)));
+    height = max([width height]);
+end
+
+if(~isempty(op))
+    tmp = round(max(op(:,1)));
+    width = max([width tmp]);
+    
+    tmp = round(max(op(:,2)));
+    height = max([width height]);
+end
+
 fid = fopen(name, 'w');
 
 fprintf(fid, '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n');
@@ -42,8 +61,8 @@ fprintf(fid, '   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"\n');
 fprintf(fid, '   xmlns:svg="http://www.w3.org/2000/svg"\n');
 fprintf(fid, '   xmlns="http://www.w3.org/2000/svg"\n');
 fprintf(fid, '   version="1.1"\n');
-fprintf(fid, '   width="%f mm"\n',  round(max(ip(:,1)) * 1.1));
-fprintf(fid, '   height="%f mm"\n', round(max(ip(:,2)) * 1.1));
+fprintf(fid, '   width="%f mm"\n',  width  * 1.1);
+fprintf(fid, '   height="%f mm"\n', height * 1.1);
 fprintf(fid, '   id="svg2">\n');
 fprintf(fid, '  <defs\n');
 fprintf(fid, '     id="defs4" />\n');
