@@ -20,7 +20,7 @@ disp('Installing the ArchAIDE Digit Tools...');
 folder = cellstr('apps');
 folder = [folder, cellstr('common')];
 folder = [folder, cellstr('manuscript')];
-
+folder = [folder, cellstr('photo')];
 
 for i=1:length(folder)
     addpath([pwd(), '/code/', char(folder(i))], '-begin');
