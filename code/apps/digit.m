@@ -118,7 +118,6 @@ if(~isempty(handles.img))
      
      cleaningIterations = str2num(get(handles.editCleaningIterations, 'String'));
 
-
      bLid = get(handles.checkboxLid, 'Value');
      
      disp('Exctraction of profiles');
@@ -128,6 +127,10 @@ if(~isempty(handles.img))
      handles.labels = labels;
      toc
 
+     inside_profile = lineSimplification(inside_profile, 0.25);
+     outside_profile = lineSimplification(outside_profile, 0.25);
+     handle_ip = lineSimplification(handle_ip, 0.25);
+     handle_op = lineSimplification(handle_op, 0.25);
           
      disp('Exctraction of scale');
      scale_points = [];
@@ -156,14 +159,15 @@ if(~isempty(handles.img))
 
      bHandleSection = get(handles.checkExtractHandleSection, 'Value');
      if(bHandleSection)
-        disp('Exctraction of handle section');
+         disp('Exctraction of handle section');
         
-        tic
-            handle_section = extractHandleSection(handles.labels, 0);
-        toc
+         tic
+         handle_section = extractHandleSection(handles.labels, 0);
+         toc
 
+         handle_section = lineSimplification(handle_section, 0.5);
      else         
-         handle_section = [];        
+         handle_section = [];       
      end
 
      inside_profile_mm = inside_profile * ratio_mm_pixels;
