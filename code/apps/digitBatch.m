@@ -151,6 +151,12 @@ for i=1:length(lst)
             toc
          end 
 
+         inside_profile = lineSimplification(inside_profile, 0.15);
+         outside_profile = lineSimplification(outside_profile, 0.15);
+         handle_ip = lineSimplification(handle_ip, 0.15);
+         handle_op = lineSimplification(handle_op, 0.15);
+         handle_section = lineSimplification(handle_section, 0.15);
+         
          %
          %into mm
          %
