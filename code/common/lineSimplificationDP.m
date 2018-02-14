@@ -27,7 +27,7 @@ if(isempty(profile))
    return
 end
 
-if(ls_epsilon <= 1e-6f)
+if(ls_epsilon <= 1e-6)
     out = profile;
     return
 end

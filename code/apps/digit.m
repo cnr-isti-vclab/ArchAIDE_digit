@@ -127,10 +127,10 @@ if(~isempty(handles.img))
      handles.labels = labels;
      toc
 
-     inside_profile = lineSimplification(inside_profile, 0.25);
-     outside_profile = lineSimplification(outside_profile, 0.25);
-     handle_ip = lineSimplification(handle_ip, 0.25);
-     handle_op = lineSimplification(handle_op, 0.25);
+     inside_profile = lineSimplification(inside_profile, 0.15);
+     outside_profile = lineSimplification(outside_profile, 0.15);
+     handle_ip = lineSimplification(handle_ip, 0.15);
+     handle_op = lineSimplification(handle_op, 0.15);
           
      disp('Exctraction of scale');
      scale_points = [];
