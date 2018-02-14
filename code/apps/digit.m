@@ -127,10 +127,10 @@ if(~isempty(handles.img))
      handles.labels = labels;
      toc
 
-     inside_profile = lineSimplification(inside_profile, 0.15);
-     outside_profile = lineSimplification(outside_profile, 0.15);
-     handle_ip = lineSimplification(handle_ip, 0.15);
-     handle_op = lineSimplification(handle_op, 0.15);
+     inside_profile = lineSimplification(inside_profile, 0.1);
+     outside_profile = lineSimplification(outside_profile, 0.1);
+     handle_ip = lineSimplification(handle_ip, 0.1);
+     handle_op = lineSimplification(handle_op, 0.1);
           
      disp('Exctraction of scale');
      scale_points = [];
@@ -150,6 +150,11 @@ if(~isempty(handles.img))
              scaleValue_in_cm = str2num(get(handles.scaleValue, 'String'));
              [scale_points, ratio_mm_pixels] = ...
                  extractScaleUI(handles.img, scaleValue_in_cm);
+         end
+     else
+         if(handles.bImageRescale)
+             ratio_mm_pixels = ratio_mm_pixels / handles.factor_scale;
+             disp(['Ratio mm/pixels:', num2str(ratio_mm_pixels)]);
          end
      end
             
@@ -511,8 +516,9 @@ else
 end
 img_tmp = double(imread(full_path)) / 255;
 
-[img_tmp, bS]  = imRescaleBinary(img_tmp, handles.bImageRescale);
+[img_tmp, bS, factor_scale]  = imRescaleBinary(img_tmp, handles.bImageRescale);
 
+handles.factor_scale = factor_scale;
 handles.img = img_tmp;
 handles.bS = bS;
 cla(handles.axes2, 'reset')

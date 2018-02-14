@@ -1,7 +1,7 @@
-function [imgOut, bS] = imRescaleBinary(img, bImageRescale)
+function [imgOut, bS, factor] = imRescaleBinary(img, bImageRescale)
 %
 %
-%       [imgOut, bS] = imRescaleBinary(img, bImageRescale)
+%       [imgOut, bS, factor] = imRescaleBinary(img, bImageRescale)
 %
 %
 % Digit
@@ -19,6 +19,8 @@ function [imgOut, bS] = imRescaleBinary(img, bImageRescale)
 %
 
 bS = 0;
+
+[rs, cs] = size(img);
 
 if(bImageRescale)
     [r, c] = size(img);
@@ -56,5 +58,9 @@ else
     bS = -1;
     imgOut = imBinary(img);
 end
+
+[re, ce] = size(imgOut);
+
+factor = ((re / rs) + (ce / cs)) / 2;
 
 end
