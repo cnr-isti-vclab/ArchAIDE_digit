@@ -1,18 +1,4 @@
-function varargout = digitPhoto(varargin)
-%
-% Digit
-% An automatic MATLAB app for the digitalization of archaeological drawings. 
-% http://vcg.isti.cnr.it
-% 
-% Copyright (C) 2016-17
-% Visual Computing Laboratory - ISTI CNR
-% http://vcg.isti.cnr.it
-% Main author: Francesco Banterle
-% 
-% This Source Code Form is subject to the terms of the Mozilla Public
-% License, v. 2.0. If a copy of the MPL was not distributed with this
-% file, You can obtain one at http://mozilla.org/MPL/2.0/.
-%
+function varargout = mockup(varargin)
 % MOCKUP MATLAB code for mockup.fig
 %      MOCKUP, by itself, creates a new MOCKUP or raises the existing
 %      singleton*.
@@ -33,6 +19,20 @@ function varargout = digitPhoto(varargin)
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
+%
+% Digit
+% An automatic MATLAB app for the digitalization of archaeological drawings. 
+% http://vcg.isti.cnr.it
+% 
+% Copyright (C) 2016-17
+% Visual Computing Laboratory - ISTI CNR
+% http://vcg.isti.cnr.it
+% Main author: Francesco Banterle
+% 
+% This Source Code Form is subject to the terms of the Mozilla Public
+% License, v. 2.0. If a copy of the MPL was not distributed with this
+% file, You can obtain one at http://mozilla.org/MPL/2.0/.
+%
 
 % Edit the above text to modify the response to help mockup
 
