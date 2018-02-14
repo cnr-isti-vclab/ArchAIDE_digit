@@ -36,7 +36,7 @@ function varargout = mockup(varargin)
 
 % Edit the above text to modify the response to help mockup
 
-% Last Modified by GUIDE v2.5 20-Dec-2017 12:03:42
+% Last Modified by GUIDE v2.5 14-Feb-2018 14:41:16
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -193,6 +193,14 @@ end
 
 if(~isempty(handles.point_wb))
     plot(handles.point_wb(1), handles.point_wb(2), 'go');
+end
+
+if(~isempty(handles.lines_cut))
+    n = size(handles.lines_cut, 1);
+    for i=1:2:n
+        line = handles.lines_cut(i:(i + 1),:);
+        drawPolyLine(line, 'magenta');
+    end
 end
 
 if(~isempty(handles.ip))
@@ -395,21 +403,21 @@ info = imfinfo(full_path);
 try
     switch info.Orientation
         case 2
-            img = img(:,end:-1:1,:);         %right to left
+            img = img(:, end:-1:1, :);         %right to left
         case 3
-            img = img(end:-1:1,end:-1:1,:);  %180 degree rotation
+            img = img(end:-1:1, end:-1:1, :);  %180 degree rotation
         case 4
-            img = img(end:-1:1,:,:);         %bottom to top
+            img = img(end:-1:1, :,:);         %bottom to top
         case 5
             img = permute(img, [2 1 3]);     %counterclockwise and upside down
         case 6
-            img = rot90(img,3);              %undo 90 degree by rotating 270
+            img = rot90(img, 3);              %undo 90 degree by rotating 270
         case 7
-            img = rot90(img(end:-1:1,:,:));  %undo counterclockwise and left/right
+            img = rot90(img(end:-1:1, :, :));  %undo counterclockwise and left/right
         case 8
             img = rot90(img);                %undo 270 rotation by rotating 90
         otherwise
-            warning(sprintf('unknown orientation %g ignored\n', orient));        
+            warning('This orientation is not known!');        
     end
 catch e
     disp(e);
@@ -436,6 +444,8 @@ guidata(hObject, handles);
 
 function handles = ResetHandles(handles)
 
+handles.lines_cut = [];
+
 handles.fragment_mask = [];
 handles.b_fragment_mask = 1;
 
@@ -457,3 +467,28 @@ handles.b_op = 1;
 
 handles.points_scale = [];
 handles.point_wb = [];
+
+
+% --- Executes on button press in pb_connect_profiles.
+function pb_connect_profiles_Callback(hObject, eventdata, handles)
+% hObject    handle to pb_connect_profiles (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+[tmp, handles.ip, handles.op] = defineCutLinesProfiles(handles.img, handles.ip, handles.op);
+
+for i=1:2:size(handles.lines_cut, 1)
+    [v, ind] = findClosestPointInProfile(handles.op, handles.lines_cut(i,:));
+    if(v > 0.5)
+        handles.lines_cut(i + 1,:) = [];
+        handles.lines_cut(i,:) = [];
+        break;
+    end
+end
+
+handles.lines_cut = [handles.lines_cut; tmp];
+
+drawThings(hObject, eventdata, handles);
+
+guidata(hObject, handles);
+
