@@ -149,7 +149,9 @@ if(~isempty(handles.img))
          else             
              scaleValue_in_cm = str2num(get(handles.scaleValue, 'String'));
              [scale_points, ratio_mm_pixels] = ...
-                 extractScaleUI(handles.img, scaleValue_in_cm);
+                 extractScaleUI(handles.img, scaleValue_in_cm);                          
+             disp(['Ratio mm/pixels:', num2str(ratio_mm_pixels)]);
+
          end
      else
          if(handles.bImageRescale)
@@ -449,7 +451,13 @@ function handles = InitImage(PathName, FileName, handles)
 
 nameOut = RemoveExt(FileName);
 
-name_data = [PathName(1:(end - 1)),'_output/', nameOut, '_data.mat'];
+if(PathName(end) == '/')
+    shift = 1;
+else
+    shift = 0;    
+end
+
+name_data = [PathName(1:(end - shift)), '_output/', nameOut, '_data.mat'];
 
 if(exist(name_data, 'file'))
     tmp = load(name_data);
@@ -477,7 +485,13 @@ if(exist(name_data, 'file'))
 else
     handles.bImageRescale = get(handles.checkResampleImage, 'Value');
 
-    outputFolder = [PathName(1:(end-1)), '_output/'];
+    if(PathName(end) == '/')
+        shift = 1;
+    else
+        shift = 0;
+    end
+    outputFolder = [PathName(1:(end - shift)), '_output/'];
+    
     if(exist(outputFolder, 'dir') ~= 7)
         mkdir(outputFolder); 
     else

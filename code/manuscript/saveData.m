@@ -45,7 +45,7 @@ data.axis_profile_mm = handles.axis_profile_mm;
 data.dataFor3D = handles.dataFor3D;
 data.bImageRescale = handles.bImageRescale;
 
-if(exist('data.data.file_ext', 'var'))
+if(exist('data.file_ext', 'var'))
     data.file_ext = handles.file_ext;
 else
     data.file_ext = [];
