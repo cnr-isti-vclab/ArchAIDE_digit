@@ -248,7 +248,7 @@ lines = bwmorph(fragment_mask, 'remove');
 lines = bwmorph(lines, 'thin');
 handles.op = extractOutsideProfilePhoto(lines, 0); 
 
-handles.connection_lines = ConnectProfiles(handles.ip, handles.op);
+[handles.connection_lines, handles.ip, handles.op] = ConnectProfiles(handles.ip, handles.op);
 
 handles.fragment_mask = fragment_mask;
 handles.b_fragment_mask = 0;
@@ -281,7 +281,7 @@ end
 handles.ip = ip;
 handles.b_ip = 0;
 
-handles.connection_lines = ConnectProfiles(handles.ip, handles.op);
+[handles.connection_lines, handles.ip, handles.op] = ConnectProfiles(handles.ip, handles.op);
 
 drawThings(hObject, eventdata, handles);
 
@@ -310,7 +310,7 @@ end
 handles.op = op;
 handles.b_op = 0;
 
-handles.connection_lines = ConnectProfiles(handles.ip, handles.op);
+[handles.connection_lines, handles.ip, handles.op] = ConnectProfiles(handles.ip, handles.op);
 
 drawThings(hObject, eventdata, handles);
 
@@ -482,7 +482,7 @@ function pb_connect_profiles_Callback(hObject, eventdata, handles)
 
 [~, handles.ip, handles.op] = defineCutLinesProfiles(handles.img, handles.ip, handles.op);
 
-handles.connection_lines = ConnectProfiles(handles.ip, handles.op);
+[handles.connection_lines, handles.ip, handles.op] = ConnectProfiles(handles.ip, handles.op);
 
 drawThings(hObject, eventdata, handles);
 
