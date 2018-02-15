@@ -195,10 +195,10 @@ if(~isempty(handles.point_wb))
     plot(handles.point_wb(1), handles.point_wb(2), 'go');
 end
 
-if(~isempty(handles.lines_cut))
-    n = size(handles.lines_cut, 1);
+if(~isempty(handles.connection_lines))
+    n = size(handles.connection_lines, 1);
     for i=1:2:n
-        line = handles.lines_cut(i:(i + 1),:);
+        line = handles.connection_lines(i:(i + 1),:);
         drawPolyLine(line, 'magenta');
     end
 end
@@ -248,6 +248,8 @@ lines = bwmorph(fragment_mask, 'remove');
 lines = bwmorph(lines, 'thin');
 handles.op = extractOutsideProfilePhoto(lines, 0); 
 
+handles.connection_lines = ConnectProfiles(handles.ip, handles.op);
+
 handles.fragment_mask = fragment_mask;
 handles.b_fragment_mask = 0;
 
@@ -279,10 +281,11 @@ end
 handles.ip = ip;
 handles.b_ip = 0;
 
+handles.connection_lines = ConnectProfiles(handles.ip, handles.op);
+
 drawThings(hObject, eventdata, handles);
 
 guidata(hObject, handles);
-
 
 % --- Executes on button press in define_outer_profile.
 function define_outer_profile_Callback(hObject, eventdata, handles)
@@ -306,6 +309,8 @@ end
 
 handles.op = op;
 handles.b_op = 0;
+
+handles.connection_lines = ConnectProfiles(handles.ip, handles.op);
 
 drawThings(hObject, eventdata, handles);
 
@@ -444,7 +449,7 @@ guidata(hObject, handles);
 
 function handles = ResetHandles(handles)
 
-handles.lines_cut = [];
+handles.connection_lines = [];
 
 handles.fragment_mask = [];
 handles.b_fragment_mask = 1;
@@ -475,18 +480,9 @@ function pb_connect_profiles_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-[tmp, handles.ip, handles.op] = defineCutLinesProfiles(handles.img, handles.ip, handles.op);
+[~, handles.ip, handles.op] = defineCutLinesProfiles(handles.img, handles.ip, handles.op);
 
-for i=1:2:size(handles.lines_cut, 1)
-    [v, ind] = findClosestPointInProfile(handles.op, handles.lines_cut(i,:));
-    if(v > 0.5)
-        handles.lines_cut(i + 1,:) = [];
-        handles.lines_cut(i,:) = [];
-        break;
-    end
-end
-
-handles.lines_cut = [handles.lines_cut; tmp];
+handles.connection_lines = ConnectProfiles(handles.ip, handles.op);
 
 drawThings(hObject, eventdata, handles);
 
