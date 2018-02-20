@@ -275,7 +275,7 @@ end
 if(~b_manual)
     ip = LiveWireInteractive(handles.img, pStart, 0);
 else
-    ip = LineInteractive(handles.img, pStart, 0);    
+    ip = LineInteractive(handles.img, pStart);    
 end
 
 handles.ip = ip;
@@ -304,7 +304,7 @@ end
 if(~b_manual)
     op = LiveWireInteractive(handles.img, pStart, 0);
 else
-    op = LineInteractive(handles.img, pStart, 0);    
+    op = LineInteractive(handles.img, pStart);    
 end
 
 handles.op = op;
@@ -376,7 +376,22 @@ end
 ip_mm = ip * handles.mm_over_pixels;
 op_mm = op * handles.mm_over_pixels;
 
-writeSVG(nameOut, ip_mm, op_mm, [], [], [], [], handles.mm_over_pixels, [], 0);
+fractures = [];
+if(~isempty(handles.connection_lines))
+    handles.connection_lines_mm = handles.connection_lines * handles.mm_over_pixels;
+
+    if(size(handles.connection_lines, 1) == 2)
+        fractures{1} = handles.connection_lines_mm;
+    end
+    
+    if(size(handles.connection_lines, 1) == 4)
+        fractures{1} = handles.connection_lines_mm(1:2,:);
+        fractures{2} = handles.connection_lines_mm(3:4,:);
+    end
+
+end
+    
+writeSVG(nameOut, ip_mm, op_mm, [], [], [], [], handles.mm_over_pixels, fractures, 0);
 
 % --------------------------------------------------------------------
 function file_tag_Callback(hObject, eventdata, handles)

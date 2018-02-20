@@ -25,7 +25,7 @@ if(isempty(ip) | isempty(op))
 end
 
 hf = figure(391);
-image(img);
+imshow(img);
 hold on;
 
 drawPolyLine(ip, 'red');

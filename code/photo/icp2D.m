@@ -90,7 +90,7 @@ cR = mean(ref);
 tx = median(pc(:,1)) - cR(1);
 ty = median(pc(:,2)) - cR(2);
 
-ref = applyTransform(ref, [tx, ty, 0.0, scale], eye(2));
+ref = applyTransformC(ref, [tx, ty, 0.0, scale], eye(2));
 
 c = 0;
 err = 1e20;
@@ -136,7 +136,7 @@ if(f_final < fMin)
     p = p_final;
 end
 
-ref = applyTransform(ref, p, []);    
+ref = applyTransformC(ref, p, []);    
 
 refOut = ref;
 
@@ -151,8 +151,24 @@ end
 %   additional functions
 %
 %
-
 function out = applyTransform(ref, p, R)
+    tx = p(1);
+    ty = p(2);
+    scale = p(4);
+    
+    if(isempty(R))
+        R = getRotationMatrix2D(p(3));
+    end
+    
+    out =[];
+    for i=1:size(ref,1)
+        tmp_i = (R * ref(i,:)' * scale);
+        tmp_i = tmp_i' + [tx, ty];
+        out = [out; tmp_i];
+    end
+end
+
+function out = applyTransformC(ref, p, R)
     tx = p(1);
     ty = p(2);
     scale = p(4);

@@ -60,11 +60,6 @@ end
 
 R = real(R);
 angle = real(acos(R(1,1)));
-t = (- R * c1')' + c2;
+t = c2 - (R * c1')';
 
-end
-
-
-function mtx = getRotationMatrix2D(a)
-    mtx = [cos(a) -sin(a); sin(a) cos(a)];
 end

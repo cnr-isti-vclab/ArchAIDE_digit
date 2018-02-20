@@ -54,12 +54,14 @@ if(d > 0.5)
     connection_lines = [connection_lines; po; pi];
 end
 
-if( (ip(end,2) < ip(1,2)) & ...
-    (op(end,2) < op(1,2)))
 
+%y grows down
+if( ip(end,2) < ip(1,2) )
     ip(:,1) = flipud(ip(:,1));
-    ip(:,2) = flipud(ip(:,2));
-    
+    ip(:,2) = flipud(ip(:,2));    
+end
+
+if( op(end,2) < op(1,2) )
     op(:,1) = flipud(op(:,1));
     op(:,2) = flipud(op(:,2));    
 end
