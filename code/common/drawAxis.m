@@ -1,4 +1,4 @@
-function drawAxis(axis)
+function drawAxis(axis, color)
 %
 %
 %        drawAxis(axis)
@@ -19,10 +19,10 @@ function drawAxis(axis)
 %
 
 if(~isempty(axis))
-    plot(axis(:,1), axis(:,2), 'LineWidth', 2, 'Color', 'blue');
+    plot(axis(:,1), axis(:,2), 'LineWidth', 2, 'Color', color);
 
-    plot(axis(1,1), axis(1,2), 'x', 'LineWidth', 2, 'Color', 'blue');
-    plot(axis(2,1), axis(2,2), 'x', 'LineWidth', 2, 'Color', 'blue');
+    plot(axis(1,1), axis(1,2), 'x', 'LineWidth', 2, 'Color', color);
+    plot(axis(2,1), axis(2,2), 'x', 'LineWidth', 2, 'Color', color);
 end
 
 end

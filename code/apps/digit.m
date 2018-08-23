@@ -289,8 +289,8 @@ end
 
 drawProfiles(handles.inside_profile, handles.outside_profile );
 drawProfiles(handles.handle_ip, handles.handle_op );
-drawAxis(handles.axis_profile);
-drawAxis(handles.scale_points);
+drawAxis(handles.axis_profile, 'blue');
+drawAxis(handles.scale_points, 'yellow');
 drawPolyLine(handles.handle_section, 'red');
 
 for i=1:length(handles.uncertain_profile)
