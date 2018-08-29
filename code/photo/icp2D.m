@@ -60,7 +60,7 @@ for k=1:n
     
     dist = sqrt((pc(:,1) - t_k(1)).^2 + (pc(:,2) - t_k(2)).^2); 
     
-    index = find( (dist < (square_size * 0.75)) &...
+    index = find( (dist < (square_size * 0.8)) &...
                   (dist > 16));
     
     if(isempty(index))
@@ -192,7 +192,7 @@ function out = applyTransformC(ref, p, R)
 end
 
 function mtx = getRotationMatrix2D(a)
-    mtx = [cos(a) -sin(a); sin(a) cos(a)]';
+    mtx = [cos(a) -sin(a); sin(a) cos(a)];
 end
 
 function err = getError(p1, p2)

@@ -83,10 +83,12 @@ y_max = max(outside_profile(:,2));
 labels(y_max:end, :) = 0;
 
 if(bHandles)
+
     bHandle = ~isempty(outside_profile_handle);
     
     if(bHandle)%process the handle 
-        if(~bBrokenLoop)%compute handle profiles        
+        if(~bBrokenLoop)%compute handle profiles       
+            
             [handle_op, handle_ip] = extractHandleProfile(lines, outside_profile, inside_profile,...
                                                           outside_profile_mouth, ...
                                                           outside_profile_handle, y_axis);
@@ -184,7 +186,12 @@ if(bHandles)
             handle_op = attachOutsideProfileToOP(handle_op, outside_profile, 0);
         end
     else %are we sure there is no handle? sanity check
-        %get the handle
+        
+        %
+        %CASE FOR SEPARTED HANDLES (i.e., not connected to the drawing)
+        %
+        
+        %get the handle                
         lst = unique(labels(labels > 0));
         n = length(lst);
 
@@ -210,13 +217,16 @@ if(bHandles)
                 end
             end        
         end
-
+        
         if(lst_index_max > 0)
             handle_mask = zeros(size(img));
             handle_mask(labels == lst(lst_index_max)) = 1;
 
             handle_lines = bwmorph(handle_mask, 'remove');
             handle_lines = bwmorph(handle_lines, 'thin');
+            
+            figure(1)
+            imshow(handle_lines)
 
             [y, x] = find(handle_lines > 0.5);
 
@@ -224,8 +234,10 @@ if(bHandles)
             v_distance = sqrt(v_distance);
 
             [y_max, ~] = max(y);
-
-            v_distance_thr = size(img, 2) * 0.05;
+            
+            height_of_the_vessel = inside_profile(1, 2) - inside_profile(end, 2);
+            
+            v_distance_thr = abs(height_of_the_vessel) * 0.1;
             
             if(v_distance < v_distance_thr)                          
                 labels(labels == lst(lst_index_max)) = 0;

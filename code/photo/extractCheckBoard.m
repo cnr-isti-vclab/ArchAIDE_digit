@@ -18,8 +18,8 @@ function [checker_length_pixels, points, imgOut, refOut] = extractCheckBoard(img
 % file, You can obtain one at http://mozilla.org/MPL/2.0/.
 %
 
-bDebug = 0;
-bDebug2 = 0;
+bDebug = 1;
+bDebug2 = 1;
 
 L = lum(img);
 

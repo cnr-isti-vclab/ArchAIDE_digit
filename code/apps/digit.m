@@ -37,7 +37,7 @@ function varargout = digit(varargin)
 
 % Edit the above text to modify the response to help digit
 
-% Last Modified by GUIDE v2.5 05-Dec-2017 16:18:22
+% Last Modified by GUIDE v2.5 29-Aug-2018 15:04:30
 
 setlib;
 % Begin initialization code - DO NOT EDIT
@@ -156,6 +156,7 @@ if(~isempty(handles.img))
      else
          if(handles.bImageRescale)
              ratio_mm_pixels = ratio_mm_pixels / handles.factor_scale;
+             disp(['Scale:', num2str(handles.factor_scale)]);
              disp(['Ratio mm/pixels:', num2str(ratio_mm_pixels)]);
          end
      end
@@ -403,7 +404,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in checkResampleImage.
+% --- Executes on button press in checkImage.
 function checkResampleImage_Callback(hObject, eventdata, handles)
 % hObject    handle to checkResampleImage (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -528,7 +529,16 @@ if(PathName(end) ~= '/')
 else
     full_path = [PathName, FileName];
 end
-img_tmp = double(imread(full_path)) / 255;
+
+set(handles.FileNameStaticText, 'String', FileName);
+
+img_tmp = imread(full_path);
+
+if(size(img_tmp, 3) == 4)
+   img_tmp = img_tmp(:,:, 1:3); 
+end
+
+img_tmp = double(img_tmp) / 255;
 
 [img_tmp, bS, factor_scale]  = imRescaleBinary(img_tmp, handles.bImageRescale);
 
@@ -664,4 +674,27 @@ else
         guidata(hObject, handles);
         set(handles.show_background, 'Value', 1.0);    
     end
+end
+
+
+
+function FileNameStaticText_Callback(hObject, eventdata, handles)
+% hObject    handle to FileNameStaticText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of FileNameStaticText as text
+%        str2double(get(hObject,'String')) returns contents of FileNameStaticText as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function FileNameStaticText_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FileNameStaticText (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
 end
