@@ -37,15 +37,15 @@ min_v = min(img_bw(:));
 max_v = max(img_bw(:));
 mean_v = (min_v + max_v ) / 2.0;
 
-T = adaptthresh(img, 0.4, 'ForegroundPolarity','dark');
-img_bw = imbinarize(img, T);
+% T = adaptthresh(img, 0.4, 'ForegroundPolarity','dark');
+% img_bw = imbinarize(img, T);
 
-% img_bw = img;
-% min_v = min(img_bw(:));
-% max_v = max(img_bw(:));
-% mean_v = (min_v + max_v ) / 2.0;
-% img_bw(img_bw >= mean_v) = 1.0;
-% img_bw(img_bw < mean_v) = 0.0;
+img_bw = img;
+min_v = min(img_bw(:));
+max_v = max(img_bw(:));
+mean_v = (min_v + max_v ) / 2.0;
+img_bw(img_bw >= mean_v) = 1.0;
+img_bw(img_bw < mean_v) = 0.0;
 
 end
 
