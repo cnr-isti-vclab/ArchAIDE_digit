@@ -1,7 +1,7 @@
-function writeSVG(name, ip, op, handle_ip, handle_op, handle_sec, axis, scale_factor, fracture_p, bPoints)
+function writeSVG(name, ip, op, handle_ip, handle_op, handle_sec, axis, scale_factor, fracture_p, bPoints, bLid)
 %
 %
-%       writeSVG(name, ip, op, handle_ip, handle_op, handle_sec, axis, scale_factor, fracture_p, bPoints)
+%       writeSVG(name, ip, op, handle_ip, handle_op, handle_sec, axis, scale_factor, fracture_p, bPoints, bLid)
 %
 %
 % Digit
@@ -93,7 +93,12 @@ if(~isempty(ip))
     end
 
     if(bAxisIsNotEmpty)
-        mouth_radius = abs(ip(1,1) - axis(1,1));
+        if(~bLid)
+            mouth_radius = abs(ip(1,1) - axis(1,1));
+        else
+            mouth_radius = abs(op(end,1) - axis(1,1));
+        end
+        
         writeText(fid, 0, 24, ['mouth_radius: ', num2str(mouth_radius)]);
     end
 end

@@ -53,7 +53,6 @@ handle_ip = [];
 handle_op = [];  
 uncertain_profile = [];
 
-
 [lines, axis_output , y_axis, labels] = imExtraction(img, cleaningIterations, bFlip, bAxis);
 
 %
@@ -223,46 +222,56 @@ if(bHandles)
             handle_mask(labels == lst(lst_index_max)) = 1;
 
             handle_lines = bwmorph(handle_mask, 'remove');
-            handle_lines = bwmorph(handle_lines, 'thin');
+            handle_lines = bwmorph(handle_lines, 'thin');    
             
-            figure(1)
-            imshow(handle_lines)
-
             [y, x] = find(handle_lines > 0.5);
 
-            [v_distance, indx] = findClosestPointInProfile([x,y], outside_profile(1,:));
+            v_distance = 1e20;
+            indx = -1;
+            for i=1:size(outside_profile, 1)            
+                [v_distance_t, indx_t] = findClosestPointInProfile([x,y], outside_profile(i,:));
+                if(v_distance_t < v_distance)
+                    v_distance = v_distance_t;
+                    indx = indx_t;
+                end
+            end
+            
             v_distance = sqrt(v_distance);
 
             [y_max, ~] = max(y);
             
             height_of_the_vessel = inside_profile(1, 2) - inside_profile(end, 2);
             
-            v_distance_thr = abs(height_of_the_vessel) * 0.1;
+            v_distance_thr = abs(height_of_the_vessel) * 0.15;
             
             if(v_distance < v_distance_thr)                          
                 labels(labels == lst(lst_index_max)) = 0;
 
+                [~, indx] = findClosestPointInProfile([x,y], outside_profile(1,:));
+                
                 handle_profile = lineCrawlerGen(handle_lines, x(indx), y(indx), y_max + 1);
 
                 if(~isempty(handle_profile))
-                    orientation = getPolylineOrientation(handle_profile, 5);
+                    orientation = getPolylineOrientation(handle_profile, 3);                   
 
                     if(~orientation)
                         handle_profile = flipud(handle_profile);
                     end
-
+                    
                     [~, index_min] = max(handle_profile(:,2));
-
+                    
                     handle_op = handle_profile(1:index_min,:);
 
                     handle_ip_t = handle_profile((index_min + 1):(end - 1),:);
                     handle_ip_t = flipud(handle_ip_t);
 
                     handle_ip = fixInternalHandleProfile(handle_ip_t, outside_profile);
+                    
 
                     %attach the ip and op profiles of the handle to the outisde profile
-                    handle_ip = attachInternalProfileToOP(handle_ip, outside_profile);
+                    thickness = findMedianThicknessInProfiles(handle_ip, handle_op);
                     handle_op = attachOutsideProfileToOP(handle_op, outside_profile, 1);
+                    handle_ip = attachInternalProfileToOP(handle_ip, handle_op, thickness, outside_profile);
                 end
             else
                 %this is probably a handle section!
@@ -275,7 +284,9 @@ if(bDebug)
     drawProfiles(handle_ip, handle_op);
 end
 
-%add missing samples
+%
+%add missing samples to the outside_profile
+%
 outside_profile = addMissingSamples(outside_profile, 0);
         
 if(isempty(handle_ip))%base point
@@ -290,7 +301,7 @@ if(isempty(handle_ip))%base point
     end
 end
 
-%case lid
+%lid's case
 if(bLid)
     [~,index] = max(abs(outside_profile(:,2)));
     tmp = outside_profile((index+1):end,:);
@@ -564,21 +575,57 @@ end
 %
 %
 %
-function handle_ip_out = attachInternalProfileToOP(handle_ip, outside_profile)
+function handle_ip_out = attachInternalProfileToOP(handle_ip, handle_op, thickness, outside_profile)
+    
+    function err = residuals_end(x)               
 
-    if(size(handle_ip,1) > 2)    
+        x = ClampImg(round(x), 1, size(outside_profile, 1));
+        
+        p = outside_profile(x,:);
+        
+        [~, ind_op] = findClosestPointInProfile(handle_op, p);
+        
+        dist = sqrt(sum((p - handle_op(ind_op,:)).^2));
+        err = abs(dist - thickness);
+    end        
+
+    opts = optimset('MaxIter', 100000, 'TolFun', 1e-12, 'TolX', 1e-12);
+
+    if(size(handle_ip, 1) > 2)    
         p_t = handle_ip(1,:) - handle_ip(2,:);
         p_t = p_t / norm(p_t);            
-        [~, index] = findClosestPointInProfile(outside_profile, handle_ip(1,:), p_t);            
-        handle_ip = [outside_profile(index,:) ; handle_ip];
+        [~, index] = findClosestPointInProfile(outside_profile, handle_ip(1,:), p_t);       
+        
+        [~, ind_top] = findClosestPointInProfile(outside_profile, handle_op(1,:));
+        
+        if(index < ind_top)
+            index = index + 2;
+        end
+        
+       thickness_t = sqrt(sum((outside_profile(index,:) - handle_op(1,:)).^2));    
+        while(abs(thickness_t - thickness) > 0.15 * thickness  && index < size(outside_profile,1))
+            index = index + 1;
 
-        p_t = handle_ip(end,:) - handle_ip(end-1,:);
-        p_t = p_t / norm(p_t);            
-        [~, index] = findClosestPointInProfile(outside_profile, handle_ip(end,:), p_t);            
+            thickness_t = sqrt(sum((outside_profile(index,:) - handle_op(1,:)).^2));
+
+        end
+
+        
+        handle_ip = [outside_profile(index,:) ; handle_ip];
+                
+        
+%        p_t = handle_ip(end,:) - handle_ip(end-1,:);
+%        p_t = p_t / norm(p_t);            
+        [~, index] = findClosestPointInProfile(outside_profile, handle_ip(end,:));   
+        
+        index = fminsearch(@residuals_end, index, opts);
+        index = round(index);
+        
         handle_ip_out = [handle_ip; outside_profile(index,:)];
     else
         handle_ip_out = handle_ip;
     end
+    
 end
 
 %
@@ -590,12 +637,11 @@ function handle_op_out = attachOutsideProfileToOP(handle_op, outside_profile, fu
         p_t = handle_op(1,:) - handle_op(2,:);
         p_t = p_t / norm(p_t);       
         [~, index] = findClosestPointInProfile(outside_profile, handle_op(1,:), p_t);    
-
         handle_op_out = [outside_profile(index,:) ; handle_op];
 
         if(full)
-            p_t = handle_op(end,:) - handle_op(end-1,:);
-            p_t = p_t / norm(p_t);            
+           p_t = handle_op(end,:) - handle_op(end-1,:);
+           p_t = p_t / norm(p_t);            
             [~, index] = findClosestPointInProfile(outside_profile, handle_op(end,:), p_t);            
             handle_op_out = [handle_op_out; outside_profile(index,:)];
         end

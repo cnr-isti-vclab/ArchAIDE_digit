@@ -29,7 +29,7 @@ if(target_n > 0.0 & target_n < 1.0)
    target_n = round(target_n * n);
 end
 
-if((n < 5) | (target_n >= n))
+if((n < 5) | (target_n >= n) | (target_n < 2))
     out = profile;
     return
 end
@@ -53,7 +53,7 @@ while (n > target_n)
     
     [~, index] = min(area(:));
     
-    profile(index + 1,:) = [];
+    profile(index + 1,:) = [];   
     
     n = size(profile, 1);
 end

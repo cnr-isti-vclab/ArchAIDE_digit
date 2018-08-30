@@ -28,7 +28,7 @@ end
 
 shift2 = shift * 2;
 
-counter = zeros(1,2);
+counter = zeros(1, 2);
 
 for i=1:(size(profile, 1) - shift2)
     A = profile(i, :);
