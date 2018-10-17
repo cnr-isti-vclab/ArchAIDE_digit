@@ -73,13 +73,42 @@ end
 %
 
 if(bSnapping)
+    height = size(img, 1);
+    width = size(img, 2);
+    
     x = p_s(1);
     y = p_s(2);
     pSize = 4;
-    patch = G((y - pSize):(y + pSize), (x - pSize):(x + pSize));
-    [I,J] = find(patch == max(patch(:)));
-    p_s(1) = x + J(1) - pSize;
-    p_s(2) = y + I(1) - pSize;
+    
+    y_s = y - pSize;
+    y_e = y + pSize;
+    x_s = x - pSize;
+    x_e = x + pSize;
+    if(y_s > 0 && x_s > 0 && y_e < height && x_e < width)
+        patch = G(y_s:y_e, x_s:x_e);
+        [I,J] = find(patch == max(patch(:)));
+        p_s(1) = x + J(1) - pSize;
+        p_s(2) = y + I(1) - pSize;
+    end
+    
+    %
+    %
+    %
+    
+    x = p_f(1);
+    y = p_f(2);
+    pSize = 4;
+    
+    y_s = y - pSize;
+    y_e = y + pSize;
+    x_s = x - pSize;
+    x_e = x + pSize;
+    if(y_s > 0 && x_s > 0 && y_e < height && x_e < width)
+        patch = G(y_s:y_e, x_s:x_e);
+        [I,J] = find(patch == max(patch(:)));
+        p_f(1) = x + J(1) - pSize;
+        p_f(2) = y + I(1) - pSize;
+    end    
 end
 
 %
@@ -204,7 +233,6 @@ while(1)
     ty = pointers(m(2), m(1), 2);    
         
     t = [tx ty];
-
     
     profile = [profile; t];
     m = t;

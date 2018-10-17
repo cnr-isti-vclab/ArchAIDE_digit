@@ -538,6 +538,11 @@ if(size(img_tmp, 3) == 4)
    img_tmp = img_tmp(:,:, 1:3); 
 end
 
+if(size(img_tmp, 3) == 2)
+   img_tmp = img_tmp(:,:, 1); 
+end
+
+
 img_tmp = double(img_tmp) / 255;
 
 [img_tmp, bS, factor_scale]  = imRescaleBinary(img_tmp, handles.bImageRescale);

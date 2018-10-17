@@ -27,12 +27,16 @@ maxSearch = round(size(lines, 1) / 2);
 dist = zeros(maxSearch, 1);
 cuts = zeros(maxSearch, 2);
 
+j = 1;
 for i=1:maxSearch
     [x_cut, y_cut] = cutpoint(lines, y_axis, i);
 
-    cuts(i, 1) = x_cut;
-    cuts(i, 2) = y_cut;
-    dist(i) = (x_cut - y_axis)^2 + y_cut.^2;
+    if(x_cut > 0 && y_cut > 0)
+        cuts(j, 1) = x_cut;
+        cuts(j, 2) = y_cut;
+        dist(j) = (x_cut - y_axis)^2 + y_cut.^2;
+        j = j + 1;
+    end
 end
 
 if(bHandles)
@@ -44,7 +48,7 @@ end
 if(index > 0)
     x_cut = cuts(index, 1);
     y_cut = cuts(index, 2);
-    
+        
     if(index > 1)
         tx_cut = cuts(index - 1, 1);
         ty_cut = cuts(index - 1, 2);
@@ -52,6 +56,11 @@ if(index > 0)
     end
     
     ip = lineCrawlerGen(lines, x_cut, y_cut);
+    
+    figure(10);
+    imshow(lines);
+    hold on;
+    plot(x_cut, y_cut, 'go');
     
     if(~isempty(ip))
         [~, indx] = max(ip(:,2));
@@ -65,7 +74,6 @@ else
     y_cut = -1;    
     ip = [];
 end
-
 
 if(~isempty(ip))
     d = abs(ip(:,1) - y_axis);  
