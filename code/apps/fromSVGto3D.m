@@ -31,7 +31,7 @@ end
 
 lst = dir([path, '/*.svg']);
 
-path_out = [path, '_out'];
+path_out = [path, '_3D'];
 
 if(exist(path_out, 'dir') ~= 7)
    mkdir(path_out); 
