@@ -1,7 +1,7 @@
-function out = reSample( profile )
+function out = reSample( profile, threshold )
 %
 %
-%        out = reSample( profile )
+%        out = reSample( profile, threshold )
 %
 %
 % Digit
@@ -18,19 +18,33 @@ function out = reSample( profile )
 % file, You can obtain one at http://mozilla.org/MPL/2.0/.
 %
 
+if(~exist('threshold', 'var'))
+   threshold = 2; %this is for profiles with values in pixels 
+end
+
 n = size(profile, 1);
-if(~isempty(profile) & (n > 2))
-    
+delta = zeros(n - 1, size(profile, 2));
+d = zeros(n - 1, 1);
+
+for i=1:(n - 1)
+    delta(i, :) = profile(i + 1,:) - profile(i,:);    
+    d(i) = sqrt(sum((delta(i,:)).^2));
+end
+
+if(threshold < 0)
+    threshold = median(d);
+end
+
+n = size(profile, 1);
+if(~isempty(profile) && (n > 2))           
     out = [];
-    for i=1:(n - 1)
-        delta = profile(i + 1,:) - profile(i,:);
-        d = sqrt(sum((delta).^2));
-        
-        if(d > 2)
-            dr = round(d);
+    for i=1:(n - 1)        
+        if(d(i) > threshold)
+            %d(i) should be rounded
             
-            for j=0:2:dr
-                p = round(delta * (j / dr)) + profile(i,:);
+            for j=0:threshold:d(i)
+                t = j / d(i);
+                p = delta(i,:) * t + profile(i,:);
                 
                 out = [out; p];
             end
@@ -38,6 +52,7 @@ if(~isempty(profile) & (n > 2))
             out = [out; profile(i,:)];
         end
     end
+
 else
     out = [];
 end

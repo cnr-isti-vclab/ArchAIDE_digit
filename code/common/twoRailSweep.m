@@ -61,7 +61,7 @@ else
             base_profile = flipud(base_profile);
         end
         
-        %resampling
+        %resample
         dt_base = 1 / (nSamples_base - 1);
         bp_tmp = [];
         for t = 0:dt_base:1
@@ -105,6 +105,7 @@ else
     %follow the rail...
     nSamples = 100;
     dt = 1 / (nSamples - 1);
+    
     for t = 0:dt:1
         p = getPointFromProfile(out_profile, t);
         p_next = getPointFromProfile(out_profile, t + dt);

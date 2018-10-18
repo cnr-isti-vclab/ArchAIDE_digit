@@ -32,7 +32,7 @@ if(t > 0.0 & t < 1.0)
     t_f = floor(t);
     delta = t - t_f;
 
-    it = t_f + 1;
+    it = t_f;
     it1 = (t_f + 1);
 
     if(it > n)
