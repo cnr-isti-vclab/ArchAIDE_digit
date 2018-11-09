@@ -22,9 +22,29 @@ if(handles.dataFor3D)
     outputFolder = [handles.outputFolder, '/'];
     
     nameOut = handles.nameOut;
-    [pIP, tIP] = revolve3DProfile(handles.inside_profile_mm, handles.axis_profile_mm(1,1), 60, 1);
     
-    [pOP, tOP] = revolve3DProfile(handles.outside_profile_mm, handles.axis_profile_mm(1,1), 60, 0);
+    %
+    %are outer and inner profiles connected?
+    %
+    
+    p_i_e = handles.inside_profile_mm(end, :);
+    p_o_e = handles.outside_profile_mm(end, :);
+    
+    dist = sqrt(sum((p_i_e - p_o_e).^2));
+    
+    bBottomCap = dist > 0.5;    
+    
+    if(~bBottomCap)
+        handles.inside_profile_mm(end, :) = p_o_e;
+    end
+    
+    %
+    %
+    %
+    
+    [pIP, tIP] = revolve3DProfile(handles.inside_profile_mm, handles.axis_profile_mm(1,1), 60, 1, bBottomCap);
+    
+    [pOP, tOP] = revolve3DProfile(handles.outside_profile_mm, handles.axis_profile_mm(1,1), 60, 0, bBottomCap);
                 
     [pH, tH, nsb ] = twoRailSweep(handles.handle_op_mm, handles.handle_ip_mm, handles.handle_section_mm, 0);
         

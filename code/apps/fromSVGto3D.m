@@ -47,7 +47,7 @@ for i=1:length(lst)
     try
         handles.dataFor3D = 1;
         handles.outputFolder = path_out;
-        handles.nameOut = [name, '.ply'];
+        handles.nameOut = name;
         
         create3DModels(handles, bCut);
     catch expr

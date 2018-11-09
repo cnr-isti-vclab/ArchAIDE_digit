@@ -46,14 +46,14 @@ nSamples = 240;
 dt = 1 / (nSamples - 1);
 
 lowest = 0;
-for t = 0:dt:1
-    p = getPointFromProfile(profile, t);  
+for t = 0.0 : dt : 1.0
+    p = getPointFromProfile(profile, t, dt);  
     if(~isempty(p))
         lowest = p(2);
         radius = p(1) - y_axis;
 
         for j=0:res_360m1
-            phi = pi * 2 * j / res_360;
+            phi = (pi * 2 * j) / res_360;
             x_t = cos(phi) * radius + y_axis;
             z_t = sin(phi) * radius + y_axis;
             pos = [x_t p(2) z_t; pos];

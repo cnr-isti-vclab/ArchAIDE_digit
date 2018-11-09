@@ -1,4 +1,4 @@
-function p = getPointFromProfile(profile, t)
+function p = getPointFromProfile(profile, t, t_delta)
 %
 %
 %       p = getPointFromProfile(profile, t)
@@ -23,7 +23,15 @@ if(isempty(profile))
     return
 end
 
-if(t > 0.0 & t < 1.0)
+if(~exist('t_delta', 'var'))
+    t_delta = 1e-6;
+else
+    t_delta = t_delta / 2.0;
+end
+
+tMax = 1.0 - t_delta;
+
+if((t > t_delta) && (t < tMax))
     n = size(profile, 1);
 
     n1 = n - 1;
@@ -52,12 +60,12 @@ if(t > 0.0 & t < 1.0)
     end
 
     p = profile(it1, :) * delta + (1 - delta) *  profile(it, :);
-else
-    if(t <= 0.0)
+else    
+    if(t <= t_delta)
        p = profile(1, :);
     end
     
-    if(t >= 1.0)
+    if(t >= tMax)
        p = profile(end, :);
     end
 end
