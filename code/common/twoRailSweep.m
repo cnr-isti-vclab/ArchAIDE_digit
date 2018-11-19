@@ -108,7 +108,7 @@ else
     
     for t = 0:dt:1
         p = getPointFromProfile(out_profile, t);
-        p_next = getPointFromProfile(out_profile, t + dt);
+        p_next = getPointFromProfile(out_profile, t + 10 * dt);
         
         p_up = getPointFromProfile(in_profile, t);
         v = getPointDistance(p, p_up);
