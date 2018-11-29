@@ -18,6 +18,13 @@ function [v, index] = findClosestPointInProfile(profile, point, p_t)
 % file, You can obtain one at http://mozilla.org/MPL/2.0/.
 %
 
+v = -1;
+index = -1;
+
+if(isempty(profile))   
+   return 
+end
+
 dx = profile(:,1) - point(1);
 dy = profile(:,2) - point(2);
 d = dx.^2 + dy.^2;

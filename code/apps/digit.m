@@ -234,7 +234,7 @@ if(~isempty(handles.img))
      toc
  end
 
- saveData(nameOut, handles);
+ %saveData(nameOut, handles);
 
  drawThings(hObject, eventdata, handles);
 end

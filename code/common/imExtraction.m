@@ -60,7 +60,7 @@ if(bAxis || isempty(axis_output))
     imshow(lines);
     axis_output = ginput(2);
     axis_output(:,1) = round((axis_output(1,1) + axis_output(2,1)) / 2);
-    close(h);
+    %close(h);
 end
 
 y_axis = round((axis_output(1,1) + axis_output(2,1)) / 2);
