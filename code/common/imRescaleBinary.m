@@ -20,19 +20,18 @@ function [imgOut, bS, factor] = imRescaleBinary(img, bImageRescale)
 
 bS = 0;
 
-[rs, cs] = size(img);
+[rs, cs, ~] = size(img);
 
 if(bImageRescale)
-    [r, c] = size(img);
 
-    numPixels = r * c;
+    numPixels = rs * cs;
 
-    if(r > c)
+    if(rs > cs)
         r2 = 1600;
-        c2 = c * (r2 / r); 
+        c2 = cs * (r2 / rs); 
     else
         c2 = 1600;
-        r2 = r * (c2 / c);         
+        r2 = rs * (c2 / cs);         
     end
 
     r2 = round(r2);
@@ -40,10 +39,11 @@ if(bImageRescale)
 
     if(numPixels < 1e6)
         img = imBinary(img);
+        [r, c, ~] = size(img);
         while((r * c) < 1e6)
             img = EPX(img);
             bS = bS + 1;
-            [r, c] = size(img);
+            [r, c, ~] = size(img);
         end
 
         imgOut = imBinary(imresize(img, [r2, c2], 'bilinear'));

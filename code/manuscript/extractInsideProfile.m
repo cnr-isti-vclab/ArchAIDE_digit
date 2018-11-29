@@ -56,12 +56,7 @@ if(index > 0)
     end
     
     ip = lineCrawlerGen(lines, x_cut, y_cut);
-    
-    figure(10);
-    imshow(lines);
-    hold on;
-    plot(x_cut, y_cut, 'go');
-    
+        
     if(~isempty(ip))
         [~, indx] = max(ip(:,2));
 
