@@ -32,7 +32,7 @@ if(handles.dataFor3D)
     
     dist = sqrt(sum((p_i_e - p_o_e).^2));
     
-    bBottomCap = dist > 0.5;    
+    bBottomCap = dist > 1.0;    
     
     if(~bBottomCap)
         handles.inside_profile_mm(end, :) = p_o_e;
