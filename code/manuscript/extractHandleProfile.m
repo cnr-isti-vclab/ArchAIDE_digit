@@ -1,4 +1,4 @@
-function [handle_op, handle_ip] = extractHandleProfile(lines, op, ip, op_mouth, op_handle, axis)
+function [handle_op, handle_ip] = extractHandleProfile(lines, op, ip, op_mouth, op_handle, bDebug)
 %
 %
 %        [handle_op, handle_ip] = extractHandleProfile(lines, op, ip, op_mouth, op_handle, axis)
@@ -21,7 +21,9 @@ function [handle_op, handle_ip] = extractHandleProfile(lines, op, ip, op_mouth, 
 handle_ip = [];
 handle_op = [];
 
-bDebug = 0;
+if(~exist('bDebug', 'var'))
+    bDebug = 0;
+end
 
 lines = cleanLines(lines, op(2:(end - 1), :), 0);
 lines = cleanLines(lines, ip(2:(end - 1), :), 0);
@@ -37,7 +39,7 @@ if(~isempty(op_mouth) & ~isempty(op_handle))
 end
 
 if(bDebug)
-  figure(55)
+  figure(55);
   imshow(lines);
   hold on;
             

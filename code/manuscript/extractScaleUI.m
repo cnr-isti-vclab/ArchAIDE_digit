@@ -18,17 +18,17 @@ function [scale_points, ratio_mm_pixels] = extractScaleUI(img, scaleValue_in_cm)
 % file, You can obtain one at http://mozilla.org/MPL/2.0/.
 %
 
-hf = figure(256);
+h = figure(2);
 imshow(img);
+scale_points = ginput(2);
+close(h);
 
-scale_points(1,:) = ginput(1);
-scale_points(2,:) = ginput(1);
+%scale_points(2,:) = ginput(1);
 
 dist = sqrt(sum((scale_points(1,:) - scale_points(2,:)).^2));
 
 ratio_mm_pixels = scaleValue_in_cm * 10 / dist;
 
-close(hf);
 
 end
 
